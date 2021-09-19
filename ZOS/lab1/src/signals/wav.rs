@@ -5,7 +5,7 @@ use std::fs;
 pub const ERR_OPEN: &str = "Cannot open file";
 pub const ERR_SELECT: &str = "File is not selected";
 
-pub const WAV_PATH: &str = "/home/sheep/Documents/labs/ZOS/lab1/example/";
+pub const WAV_PATH: &str = "/home/sheep/Documents/labs/BSUIR-POIT-4-YEAR-LABS/ZOS/lab1/example/";
 
 #[derive(Clone)]
 pub struct Wav {
