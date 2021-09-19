@@ -1,0 +1,51 @@
+use gtk::prelude::*;
+use gtk::subclass::prelude::*;
+use gtk::{glib, CompositeTemplate, Label, Entry};
+
+
+// Object holding the state
+#[derive(Default, CompositeTemplate)]
+#[template(file = "input.ui")]
+pub struct Input {
+    #[template_child(id = "input_label")]
+    pub label: TemplateChild<Label>,
+
+    #[template_child(id = "input_entry")]
+    pub entry: TemplateChild<Entry>,
+}
+
+// The central trait for subclassing a GObject
+#[glib::object_subclass]
+impl ObjectSubclass for Input {
+    const NAME: &'static str = "Input";
+    type Type = super::Input;
+    type ParentType = gtk::Box;
+
+    fn class_init(klass: &mut Self::Class) {
+        Self::bind_template(klass);
+    }
+
+    fn instance_init(obj: &glib::subclass::InitializingObject<Self>) {
+        obj.init_template();
+    }
+}
+
+// Trait shared by all GObjects
+impl ObjectImpl for Input {
+}
+
+// Trait shared by all widgets
+impl WidgetImpl for Input {
+    fn grab_focus(&self, _widget: &Self::Type) -> bool {
+        self.entry.grab_focus()
+    }
+}
+
+impl BoxImpl for Input {}
+
+// FIXME: it panics when you try to use it, sad
+impl EditableImpl for Input {
+    fn delegate(&self, _input: &Self::Type) -> Option<gtk::Editable> {
+        Some(self.entry.clone().upcast())
+    }
+}
