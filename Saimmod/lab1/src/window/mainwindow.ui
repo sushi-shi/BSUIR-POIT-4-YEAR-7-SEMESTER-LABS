@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="MyGtkAppWindow" parent="GtkApplicationWindow">
+    <property name="title" translatable="yes">Floating Lab</property>
+    <property name="can-focus">1</property>
+    <child>
+      <object class="GtkGrid" id="main_grid">
+        <property name="hexpand">1</property>
+        <property name="can-focus">1</property>
+        <child>
+          <object class="GtkGrid" id="input_grid">
+            <property name="can-focus">1</property>
+            <property name="row-homogeneous">1</property>
+            <child>
+              <object class="GtkLabel" id="mult_label">
+                <property name="can-focus">1</property>
+                <property name="label" translatable="yes">a</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="init_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">r_0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="mod_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">m</property>
+                <property name="width-chars">6</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="mult_entry">
+                <property name="can-focus">1</property>
+                <!-- <property name="input-purpose">digits</property> -->
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="calc_button">
+                <property name="label" translatable="yes">Calculate!</property>
+                <property name="receives-default">1</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                  <property name="column-span">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="init_entry">
+                <property name="input-purpose">digits</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="mod_entry">
+                <property name="input-purpose">digits</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkGrid" id="output_grid">
+            <property name="can-focus">0</property>
+            <property name="row-homogeneous">1</property>
+            <child>
+              <object class="GtkLabel" id="mean_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">mean</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="mean_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="disp_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">disp</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="disp_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="devi_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">devi</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="devi_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="indir_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">indir</property>
+                <property name="width-chars">6</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="indir_value">
+                <property name="can-focus">0</property>
+                <property name="width-chars">21</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="len_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">len</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="len_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="period_len_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">period</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="period_len_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="aperiod_len_label">
+                <property name="can-focus">0</property>
+                <property name="label" translatable="yes">aperiod</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">6</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="aperiod_len_value">
+                <property name="can-focus">0</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">6</property>
+                </layout>
+              </object>
+            </child>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="img_box">
+            <property name="hexpand">1</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+              <property name="row-span">2</property>
+            </layout>
+            <child>
+              <object class="GtkPicture" id="picture">
+                <property name="width_request">600</property>
+                <property name="height_request">400</property>
+                <property name="can-focus">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
