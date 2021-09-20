@@ -1,7 +1,6 @@
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{glib, CompositeTemplate, Label, Entry};
-
+use gtk::{glib, CompositeTemplate, Entry, Label};
 
 // Object holding the state
 #[derive(Default, CompositeTemplate)]
@@ -31,8 +30,7 @@ impl ObjectSubclass for Input {
 }
 
 // Trait shared by all GObjects
-impl ObjectImpl for Input {
-}
+impl ObjectImpl for Input {}
 
 // Trait shared by all widgets
 impl WidgetImpl for Input {

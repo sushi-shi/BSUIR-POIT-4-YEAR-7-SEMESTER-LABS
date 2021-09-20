@@ -35,9 +35,9 @@ impl LinearPolyharmonic {
         let polyharmonic = Polyharmonic::parse_anchor(inputs.0)?;
         let (a, f, p) = parse_harmony(inputs.1)?;
 
-        for x in vec![a, f, p] {
-            if !(0.8 ..= 1.2).contains(&x) {
-                Err(ERROR_PARSE_LINEAR)?
+        for x in &[a, f, p] {
+            if !(0.8..=1.2).contains(x) {
+                return Err(ERROR_PARSE_LINEAR);
             }
         }
 
@@ -48,7 +48,6 @@ impl LinearPolyharmonic {
             phi_linear: p,
         })
     }
-
 }
 
 impl Named for LinearPolyharmonic {
@@ -60,32 +59,36 @@ impl SignalBox for LinearPolyharmonic {
         Polyharmonic::set(anchor);
         set_separator(anchor);
         set_harmony(anchor, 1.0, 1.0, 1.0);
-    } 
+    }
 
     fn get(anchor: &GtkBox) -> ResultParse<Self> {
-        Self::parse_anchor(Self::raise_anchor(anchor).expect("Couldn't uphold LinearPolyharmonic invariants"))
+        Self::parse_anchor(
+            Self::raise_anchor(anchor).expect("Couldn't uphold LinearPolyharmonic invariants"),
+        )
     }
 }
 
 impl Signal for LinearPolyharmonic {
     fn function(&self) -> Box<dyn Fn(u64) -> f64> {
-        let linear = self.clone();
+        let linear = *self;
         let harms = linear.polyharmonic.harmonics;
         Box::new(move |n| {
             let n = n as f64;
-            harms.iter().map(|harm| {
-                let period = harm.n as f64 / harm.frqnz;
-                let power  = n / period as usize as f64;
-                let ampltd = harm.ampltd * f64::powf(linear.ampltd_linear, power);
-                let frqnz  = harm.frqnz  * f64::powf(linear.frqnz_linear, power);
-                let phi    = harm.phi    * f64::powf(linear.phi_linear, power);
-                ampltd * f64::sin((2.0 * PI * frqnz * n) / harm.n as f64 + phi)
-            }).sum()
+            harms
+                .iter()
+                .map(|harm| {
+                    let period = harm.n as f64 / harm.frqnz;
+                    let power = n / period as usize as f64;
+                    let ampltd = harm.ampltd * f64::powf(linear.ampltd_linear, power);
+                    let frqnz = harm.frqnz * f64::powf(linear.frqnz_linear, power);
+                    let phi = harm.phi * f64::powf(linear.phi_linear, power);
+                    ampltd * f64::sin((2.0 * PI * frqnz * n) / harm.n as f64 + phi)
+                })
+                .sum()
         })
     }
 
     fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0 .. self.polyharmonic.n + 1, None, self.function(), path)
+        draw_generic(0..self.polyharmonic.n + 1, None, self.function(), path)
     }
 }
-

@@ -1,12 +1,6 @@
 use crate::signals::{
+    utils::{get_discrete, get_separator, parse_discrete, set_discrete, set_separator},
     *,
-    utils::{
-        set_separator,
-        get_separator,
-        set_discrete,
-        get_discrete,
-        parse_discrete,
-    },
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -46,7 +40,10 @@ impl Harmonic {
         let n = parse_discrete(&inputs.1)?;
 
         Ok(Harmonic {
-            ampltd, frqnz, phi, n
+            ampltd,
+            frqnz,
+            phi,
+            n,
         })
     }
 }
@@ -56,26 +53,29 @@ impl Named for Harmonic {
 }
 
 impl SignalBox for Harmonic {
-    fn set(anchor: &GtkBox) -> () {
+    fn set(anchor: &GtkBox) {
         Harmonic::drop_anchor(anchor)
     }
 
     fn get(anchor: &GtkBox) -> ResultParse<Self> {
-        Harmonic::parse_anchor(
-            Harmonic::raise_anchor(anchor).expect("Is not harmonic")
-        )
+        Harmonic::parse_anchor(Harmonic::raise_anchor(anchor).expect("Is not harmonic"))
     }
 }
 
 impl Signal for Harmonic {
     fn function(&self) -> Box<dyn Fn(u64) -> f64> {
-        let harm = self.clone(); // self-harm, haha
+        let harm = *self; // self-harm, haha
         Box::new(move |n| {
             harm.ampltd * f64::sin((2.0 * PI * harm.frqnz * n as f64) / harm.n as f64 + harm.phi)
         })
     }
 
     fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0 .. self.n + 1, Some(-self.ampltd .. self.ampltd), self.function(), path)
+        draw_generic(
+            0..self.n + 1,
+            Some(-self.ampltd..self.ampltd),
+            self.function(),
+            path,
+        )
     }
 }

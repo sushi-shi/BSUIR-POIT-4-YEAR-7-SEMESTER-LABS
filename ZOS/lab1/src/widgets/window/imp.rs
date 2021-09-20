@@ -1,13 +1,9 @@
-use glib::{
-    subclass::InitializingObject,
-};
 use glib::clone;
+use glib::subclass::InitializingObject;
 use gtk::glib;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{Button, CompositeTemplate, Picture,
-    ComboBoxText, Box as GtkBox,
-};
+use gtk::{Box as GtkBox, Button, ComboBoxText, CompositeTemplate, Picture};
 
 use crate::*;
 
@@ -28,7 +24,6 @@ pub struct Window {
 
     #[template_child]
     pub picture: TemplateChild<Picture>,
-
 }
 
 // The central trait for subclassing a GObject
@@ -80,7 +75,7 @@ impl ObjectImpl for Window {
                     let tmp = TempDir::new("signal_drawing").expect("Coulnd't create temporary directory");
 
                     let buffer = tmp.path().join("graph.png");
-                    let path: &str = &buffer.to_str().unwrap();
+                    let path: &str = buffer.to_str().unwrap();
 
                     let _ = signals::Signal::draw(&signal, path);
                     picture.set_filename(Some(path));
@@ -113,4 +108,3 @@ impl WindowImpl for Window {}
 
 // Trait shared by all application
 impl ApplicationWindowImpl for Window {}
-

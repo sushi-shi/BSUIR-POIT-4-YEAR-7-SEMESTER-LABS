@@ -18,16 +18,20 @@ pub struct Triangular {
 
 impl Triangular {
     fn new(height: f64, frqnz: f64, n: usize) -> Result<Triangular, &'static str> {
-        if n > DEFAULT_DISCREDITATION { Err(ERROR_DISCRETIZATION_TOO_BIG)? }
-        if n & (n - 1) != 0 { Err(ERROR_NOT_POWER_TWO)? }
+        if n > DEFAULT_DISCREDITATION {
+            return Err(ERROR_DISCRETIZATION_TOO_BIG);
+        }
+        if n & (n - 1) != 0 {
+            return Err(ERROR_NOT_POWER_TWO);
+        }
 
         let step = DEFAULT_DISCREDITATION / n;
         let len = (DEFAULT_DISCREDITATION as f64 / (frqnz * 4.0)) as usize;
         let delta = height / len as f64;
-        let signal = (0 ..= len).map(|x| x as f64 * delta).collect();
+        let signal = (0..=len).map(|x| x as f64 * delta).collect();
 
         Ok(Triangular {
-            signal, 
+            signal,
             step,
 
             height,
@@ -66,20 +70,17 @@ impl Triangular {
     }
 }
 
-
 impl Named for Triangular {
     const NAME: &'static str = "triangular";
 }
 
 impl SignalBox for Triangular {
-    fn set(anchor: &GtkBox) -> () {
+    fn set(anchor: &GtkBox) {
         Triangular::drop_anchor(anchor)
     }
 
     fn get(anchor: &GtkBox) -> ResultParse<Self> {
-        Triangular::parse_anchor(
-            Triangular::raise_anchor(anchor).expect("Is not Triangulary")
-        )
+        Triangular::parse_anchor(Triangular::raise_anchor(anchor).expect("Is not Triangulary"))
     }
 }
 
@@ -90,22 +91,24 @@ impl Signal for Triangular {
             let len = tooth.signal.len();
             let n = n as usize * tooth.step % (len * 4);
             let mul = if n < 2 * len { 1.0 } else { -1.0 };
-            mul * tooth.signal[
-                if n < len {
-                    n
-                } else if n < 2 * len {
-                    2 * len - n - 1
-                } else if n < 3 * len {
-                    n - 2 * len 
-                } else {
-                    4 * len - n - 1
-                }
-            ]
+            mul * tooth.signal[if n < len {
+                n
+            } else if n < 2 * len {
+                2 * len - n - 1
+            } else if n < 3 * len {
+                n - 2 * len
+            } else {
+                4 * len - n - 1
+            }]
         })
     }
 
     fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0 .. self.n as u64 + 1, Some(-1.0 - self.height .. self.height + 1.0), self.function(), path)
+        draw_generic(
+            0..self.n as u64 + 1,
+            Some(-1.0 - self.height..self.height + 1.0),
+            self.function(),
+            path,
+        )
     }
 }
-

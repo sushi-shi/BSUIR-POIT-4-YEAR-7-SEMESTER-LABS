@@ -19,19 +19,23 @@ pub struct Sawtooth {
 /// Only one tooth is going to be stored in memory. So modular math it is.
 /// `DEFAULT_DISCREDITATION` represents the number of step on the whole graph.
 /// 1. Which means our vector should have the size equal to `DEFAULT_DISCREDITATION / frqnz`
-/// 2. But we must also skip steps if given discretization is smaller 
+/// 2. But we must also skip steps if given discretization is smaller
 impl Sawtooth {
     fn new(height: f64, frqnz: f64, n: usize) -> Result<Sawtooth, &'static str> {
-        if n > DEFAULT_DISCREDITATION { Err(ERROR_DISCRETIZATION_TOO_BIG)? }
-        if n & (n - 1) != 0 { Err(ERROR_NOT_POWER_TWO)? }
+        if n > DEFAULT_DISCREDITATION {
+            return Err(ERROR_DISCRETIZATION_TOO_BIG);
+        }
+        if n & (n - 1) != 0 {
+            return Err(ERROR_NOT_POWER_TWO);
+        }
 
         let step = DEFAULT_DISCREDITATION / n;
         let len = (DEFAULT_DISCREDITATION as f64 / frqnz) as usize;
         let delta = height / len as f64;
-        let signal = (0 ..= len).map(|x| x as f64 * delta).collect();
+        let signal = (0..=len).map(|x| x as f64 * delta).collect();
 
         Ok(Sawtooth {
-            signal, 
+            signal,
             step,
 
             height,
@@ -70,37 +74,32 @@ impl Sawtooth {
     }
 }
 
-
 impl Named for Sawtooth {
     const NAME: &'static str = "sawtooth";
 }
 
 impl SignalBox for Sawtooth {
-    fn set(anchor: &GtkBox) -> () {
+    fn set(anchor: &GtkBox) {
         Sawtooth::drop_anchor(anchor)
     }
 
     fn get(anchor: &GtkBox) -> ResultParse<Self> {
-        Sawtooth::parse_anchor(
-            Sawtooth::raise_anchor(anchor).expect("Is not sawtoothy")
-        )
+        Sawtooth::parse_anchor(Sawtooth::raise_anchor(anchor).expect("Is not sawtoothy"))
     }
 }
 
 impl Signal for Sawtooth {
     fn function(&self) -> Box<dyn Fn(u64) -> f64> {
         let tooth = self.clone();
-        Box::new(move |n| {
-            tooth.signal[
-                n as usize * tooth.step % tooth.signal.len()
-            ]
-        })
+        Box::new(move |n| tooth.signal[n as usize * tooth.step % tooth.signal.len()])
     }
 
     fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0 .. self.n as u64 + 1, Some(0.0 .. self.height + 1.0), self.function(), path)
+        draw_generic(
+            0..self.n as u64 + 1,
+            Some(0.0..self.height + 1.0),
+            self.function(),
+            path,
+        )
     }
 }
-
-
-

@@ -1,17 +1,12 @@
 mod picture;
-mod widgets;
 mod signals;
+mod widgets;
 
-use crate::{
-    widgets::window::Window,
-};
+use crate::widgets::window::Window;
 
-use gtk::{
-    Application,
-    prelude::*,
-};
+use gtk::{prelude::*, Application};
 
-fn build_ui(app: &Application)  {
+fn build_ui(app: &Application) {
     let window = Window::new(app);
     window.present();
 }
@@ -26,4 +21,3 @@ fn main() {
     // Run the application
     app.run();
 }
-

@@ -1,10 +1,10 @@
 mod imp;
 
-use glib::{Object, GString};
+use glib::{GString, Object};
 
+use gtk::glib;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{glib};
 
 glib::wrapper! {
     pub struct Input(ObjectSubclass<imp::Input>)
