@@ -10,6 +10,8 @@ mod sawtooth;
 mod triangular;
 mod utils;
 mod wav;
+mod amplitude_modulation;
+mod frequency_modulation;
 pub mod widget;
 
 pub use harmonic::*;
@@ -18,6 +20,8 @@ pub use polyharmonic::*;
 pub use sawtooth::*;
 pub use triangular::*;
 pub use wav::*;
+pub use amplitude_modulation::*;
+pub use frequency_modulation::*;
 
 pub use utils::*;
 

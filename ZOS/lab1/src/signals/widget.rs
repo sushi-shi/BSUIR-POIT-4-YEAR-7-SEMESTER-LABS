@@ -10,6 +10,8 @@ pub fn initialize(signal_selector: &ComboBoxText) {
     signal_selector.append_text(Sawtooth::NAME);
     signal_selector.append_text(Triangular::NAME);
     signal_selector.append_text(Wav::NAME);
+    signal_selector.append_text(AmplitudeMod::NAME);
+    signal_selector.append_text(FrequencyMod::NAME);
 }
 
 pub fn set(anchor: &GtkBox, signal_selector: &ComboBoxText) {
@@ -22,6 +24,8 @@ pub fn set(anchor: &GtkBox, signal_selector: &ComboBoxText) {
         Some(Sawtooth::NAME) => Sawtooth::set(anchor),
         Some(Triangular::NAME) => Triangular::set(anchor),
         Some(Wav::NAME) => Wav::set(anchor),
+        Some(AmplitudeMod::NAME) => AmplitudeMod::set(anchor),
+        Some(FrequencyMod::NAME) => FrequencyMod::set(anchor),
         Some(_) => unimplemented!(),
         None => (),
     }
@@ -42,6 +46,8 @@ pub fn get(
         Some(Sawtooth::NAME) => Sawtooth::get(anchor).map(|x| Box::new(x) as Box<dyn Signal>),
         Some(Triangular::NAME) => Triangular::get(anchor).map(|x| Box::new(x) as Box<dyn Signal>),
         Some(Wav::NAME) => Wav::get(anchor).map(|x| Box::new(x) as Box<dyn Signal>),
+        Some(AmplitudeMod::NAME) => AmplitudeMod::get(anchor).map(|x| Box::new(x) as Box<dyn Signal>),
+        Some(FrequencyMod::NAME) => FrequencyMod::get(anchor).map(|x| Box::new(x) as Box<dyn Signal>),
         Some(_) => unimplemented!(),
         None => Err(ERROR_NO_SIGNAL),
     }
