@@ -7,5 +7,5 @@ edition = "2018"
 
 [dependencies]
 petgraph="0.6.0"
-nohash-hasher="0.2.0"
-
+ndarray-linalg = { version = "0.14.1", features = ["openblas-static"] }
+ndarray = "0.15.3"

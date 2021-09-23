@@ -1,9 +1,13 @@
 use petgraph::graph;
 use petgraph::graph::{NodeIndex, Graph};
-use petgraph::dot::{Dot};
+use petgraph::dot::Dot;
 
-use std::collections::HashMap;
+use ndarray::prelude::*;
+use ndarray_linalg::Solve;
 
+use std::collections::{HashMap, HashSet};
+use std::fs;
+use std::error::Error;
 
 /// There are two invariants:
 /// 1. Entry is a Generator
@@ -12,6 +16,9 @@ struct System {
     graph: graph::Graph<Element, ()>,
     entry: graph::NodeIndex,
     state_size: usize,
+    ro: f32,
+    pi1: f32,
+    pi2: f32,
 }
 #[derive(Clone, Copy)]
 enum Element {
@@ -59,6 +66,9 @@ fn var36() -> System {
         graph,
         entry: gen,
         state_size: 3,
+        ro: RO,
+        pi1: PI1,
+        pi2: PI2,
     }
 }
 
@@ -179,7 +189,7 @@ fn step_rec(
                 ),
                 (
                     state, 
-                    (1.0 - *chance, vec![format!("(1-PI{})", no.to_string())]), 
+                    (1.0 - *chance, vec![format!("(1 - PI{})", no.to_string())]), 
                     Message::IsConsumed,
                 ),
             ],
@@ -198,7 +208,7 @@ fn step_rec(
                     ),
                     (
                         state_, 
-                        (1.0 - *chance, vec![format!("(1-PI{})", no.to_string())]), 
+                        (1.0 - *chance, vec![format!("(1 - PI{})", no.to_string())]), 
                         Message::IsConsumed,
                     ),
                 ]
@@ -222,7 +232,7 @@ fn state_transitions(system: &System) -> StateTransitions {
 
     let mut visited = HashMap::new();
     let init_state_idx = stts.add_node(init_state.clone());
-    let _none = visited.insert(init_state.clone(), init_state_idx);
+    let _none = visited.insert(init_state, init_state_idx);
 
     loop {
         if new.is_empty() { break; }
@@ -230,7 +240,7 @@ fn state_transitions(system: &System) -> StateTransitions {
         for from_state in new {
             let from_state_idx = *visited.get(&from_state).expect("All new nodes are already in a hashmap");
 
-            for (to_state, transition) in step(&system, from_state.clone()) {
+            for (to_state, transition) in step(system, from_state.clone()) {
                 let to_state_idx = match visited.get(&to_state) {
                     None => { // a new 
                         // Has not been visited, let's visit it later
@@ -254,12 +264,118 @@ fn state_transitions(system: &System) -> StateTransitions {
     stts
 }
 
-fn main() {
-    let stts = state_transitions(&var36());
-    let _calcy_stts = stts.clone();
-    let pretty_stts = stts
-        .map(|_, x| x, |_, (_, labels)| labels.join("*"));
-    println!("{:?}", Dot::new(&pretty_stts));
+fn state_to_int(state: &State) -> String {
+    state
+        .iter()
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>()
+        .join("")
+}
 
+fn main() -> Result<(), Box<dyn Error>> {
+    let sys = var36();
+    let stts = state_transitions(&sys);
+    let calcy_stts = stts.clone();
+    let pretty_stts = stts
+        .map(|_, x| state_to_int(x), |_, (_, labels)| labels.join("*"));
+
+    fs::write("./graph.draw", Dot::new(&pretty_stts).to_string())?;
+
+
+    let mut equations = Array2::zeros((calcy_stts.node_count(), calcy_stts.node_count()));
+    let mut solutions = Array::zeros(calcy_stts.node_count());
+    let mut names = Vec::new();
+    println!("Equations:");
+    for state_idx in calcy_stts.node_indices() {
+        let state = calcy_stts.node_weight(state_idx).unwrap();
+        let state = state_to_int(state);
+        names.push(state.clone());
+
+        let mut stack = Vec::new();
+        for neighbor_idx in calcy_stts.neighbors_directed(state_idx, petgraph::Direction::Incoming).collect::<HashSet<_>>() {
+            let neighbor = calcy_stts.node_weight(neighbor_idx).unwrap();
+            let neighbor = state_to_int(neighbor);
+
+            let mut chance = 0.;
+            for transition in calcy_stts.edges_connecting(neighbor_idx, state_idx) {
+                stack.push(format!("({}) * P{}", transition.weight().1.join(" * "), neighbor));
+                chance += transition.weight().0;
+            }
+            equations[[state_idx.index(), neighbor_idx.index()]] = chance;
+        }
+        equations[[state_idx.index(), state_idx.index()]] -= 1.;
+        println!("P{} = {}", state, stack.join(" + "));
+    }
+
+    solutions[0] = 1.;
+    for i in 0 .. calcy_stts.node_count() {
+        equations[[0, i]] = 1.; // overwrite one equation
+    }
+
+    let chances = equations.solve_into(solutions).unwrap();
+    let states: Vec<_> = calcy_stts
+        .node_indices()
+        .map(|x| calcy_stts.node_weight(x).unwrap().clone())
+        .zip(chances.iter().copied())
+        .collect();
+
+    println!("\nChances:");
+    names
+        .into_iter()
+        .zip(chances)
+        .for_each(|(name, res)| println!("P{} = {}", name, res));
+
+    let chance_reject: f32;
+    let chance_block: f32;
+    let average_queue_num: f32;
+    let average_system_num: f32;
+    let average_queue_time: f32;
+    let average_system_time: f32;
+    let relative_throughput: f32;
+    let absolute_throughput: f32;
+    let average_channel_load_1: f32;
+    let average_channel_load_2: f32;
+    
+    let filter_sum = |f: Box<dyn Fn(&State) -> _>| states.iter().filter(|(state, _)| f(state)).map(|x| x.1).sum::<f32>();
+
+    chance_block = 0.;
+    chance_reject = sys.ro + filter_sum(Box::new(|state| state[1] == 1 && state[2] == 1 && state[0] == 2)) * sys.ro;
+
+    let when_2 = filter_sum(Box::new(|state| state[1] == 1 && state[2] == 1));
+    let when_1_1 = filter_sum(Box::new(|state| state[1] == 1));
+    let when_1_2 = filter_sum(Box::new(|state| state[2] == 1));
+    absolute_throughput = 
+        2. * when_2 * (1. - sys.pi1) * (1. - sys.pi2) 
+        + when_1_1 * (1. - sys.pi1) 
+        + when_1_2 * (1. - sys.pi2);
+
+    relative_throughput = absolute_throughput / sys.ro;
+
+    average_queue_num = 
+        filter_sum(Box::new(|state| state[0] == 1)) 
+        + 2. * filter_sum(Box::new(|state| state[0] == 2));
+    average_system_num = 
+        states.iter().map(|(state, c)| (state[0] + state[1] + state[2], c)).map(|(n, c)| n as f32 * c).sum::<f32>();
+    average_queue_time = average_queue_num / absolute_throughput;
+    average_system_time = average_system_num / absolute_throughput;
+    
+    average_channel_load_1 = filter_sum(Box::new(|state| state[1] == 1));
+    average_channel_load_2 = filter_sum(Box::new(|state| state[2] == 1));
+
+
+    println!("\nCharacteristics:");
+
+    println!("P_bl: {}", chance_reject);
+    println!("P_bl: {}", chance_block);
+    println!("A   : {}", absolute_throughput);
+    println!("Q   : {}", relative_throughput);
+    println!("L_оч: {}", average_queue_num);
+    println!("L_c : {}", average_system_num);
+    println!("W_оч: {}", average_queue_time);
+    println!("W_c : {}", average_system_time);
+    println!("K_1 : {}", average_channel_load_1);
+    println!("K_2 : {}", average_channel_load_2);
+
+    Ok(())
 }
 
