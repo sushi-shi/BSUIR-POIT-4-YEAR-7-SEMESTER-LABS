@@ -63,11 +63,12 @@ impl Signal for FrequencyMod {
         let message = (*self).harmonics[1];
         Box::new(move |n| {
             let t = n as f64 / n_big;
-            let x = 2.0 * PI * carrier.frqnz * t; 
-            let y = 2.0 * PI * message.ampltd;
-            let z: f64 = (0..=n).map(message.function()).sum();
+            // let x = 2.0 * PI * carrier.frqnz * t; 
+            // let y = 2.0 * PI * message.ampltd;
+            // let z: f64 = (0..=n).map(message.function()).sum();
             
-           carrier.ampltd * f64::cos(x + y * z)
+           carrier.ampltd * f64::cos(2.0 * PI * carrier.frqnz * t + carrier.phi - 10.0 * message.ampltd / message.frqnz * f64::cos(2.0 * PI * message.frqnz * t))
+           // carrier.ampltd * f64::cos(x + y * z)
         })
     }
 
