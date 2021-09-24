@@ -184,12 +184,12 @@ fn step_rec(
             Message::IsPending if state[*no] == 1 => vec![
                 (
                     state.clone(), 
-                    (*chance, vec![format!("PI{}", no.to_string())]), 
+                    (*chance, vec![format!("π{}", no.to_string())]), 
                      Message::IsPending,
                 ),
                 (
                     state, 
-                    (1.0 - *chance, vec![format!("(1 - PI{})", no.to_string())]), 
+                    (1.0 - *chance, vec![format!("(1 - π{})", no.to_string())]), 
                     Message::IsConsumed,
                 ),
             ],
@@ -203,12 +203,12 @@ fn step_rec(
                 vec![
                     (
                         state, 
-                        (*chance, vec![format!("PI{}", no.to_string())]), 
+                        (*chance, vec![format!("π{}", no.to_string())]), 
                         Message::IsConsumed,
                     ),
                     (
                         state_, 
-                        (1.0 - *chance, vec![format!("(1 - PI{})", no.to_string())]), 
+                        (1.0 - *chance, vec![format!("(1 - π{})", no.to_string())]), 
                         Message::IsConsumed,
                     ),
                 ]
@@ -320,10 +320,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         .collect();
 
     println!("\nChances:");
-    names
-        .into_iter()
-        .zip(chances)
-        .for_each(|(name, res)| println!("P{} = {}", name, res));
+    let mut names = names.into_iter().zip(chances).collect::<Vec<_>>();
+    names.sort_by_key(|x| x.0.clone());
+    names.into_iter().for_each(|(name, res)| println!("P{} = {}", name, res));
 
     let chance_reject: f32;
     let chance_block: f32;
@@ -365,12 +364,12 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("\nCharacteristics:");
 
-    println!("P_bl: {}", chance_reject);
+    println!("P_от: {}", chance_reject);
     println!("P_bl: {}", chance_block);
-    println!("A   : {}", absolute_throughput);
-    println!("Q   : {}", relative_throughput);
     println!("L_оч: {}", average_queue_num);
     println!("L_c : {}", average_system_num);
+    println!("Q   : {}", relative_throughput);
+    println!("A   : {}", absolute_throughput);
     println!("W_оч: {}", average_queue_time);
     println!("W_c : {}", average_system_time);
     println!("K_1 : {}", average_channel_load_1);
