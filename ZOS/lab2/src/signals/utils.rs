@@ -1,4 +1,5 @@
 use crate::signals::*;
+use crate::signals::fourier::discrete_fourier;
 
 pub const ERROR_PARSE_AMPLITUDE: &str = "Couldn't parse amplitude";
 pub const ERROR_PARSE_PHI: &str = "Couldn't parse phi";
@@ -6,6 +7,29 @@ pub const ERROR_PARSE_FREQUENCY: &str = "Couldn't parse frequency";
 pub const ERROR_PARSE_DISCRETE: &str = "Couldn't parse discrete number";
 
 pub const DEFAULT_WIDTH: i32 = 6;
+
+
+pub fn get_harmony(widget: Option<Widget>) -> OptionBox<(GString, GString, GString)> {
+    let ampltd_input = widget?.downcast::<Input>().ok()?;
+    let frqnz_input = ampltd_input.next_sibling()?.downcast::<Input>().ok()?;
+    let phi_input = frqnz_input.next_sibling()?.downcast::<Input>().ok()?;
+    let widget = phi_input.next_sibling();
+
+    Some((
+        widget,
+        (ampltd_input.text(), frqnz_input.text(), phi_input.text()),
+    ))
+}
+
+
+pub fn parse_harmony(inputs: (GString, GString, GString)) -> ResultParse<(f64, f64, f64)> {
+    let ampltd = parse_f64(&inputs.0, ERROR_PARSE_AMPLITUDE)?;
+    let frqnz = parse_f64(&inputs.1, ERROR_PARSE_FREQUENCY)?;
+    let phi = parse_f64(&inputs.2, ERROR_PARSE_PHI)?;
+
+    Ok((ampltd, frqnz, phi))
+}
+
 
 pub fn get_child(anchor: &GtkBox) -> OptionBox<()> {
     Some((anchor.first_child(), ()))
@@ -24,17 +48,6 @@ pub fn get_discrete(widget: Option<Widget>) -> OptionBox<GString> {
     get_input(widget)
 }
 
-pub fn get_harmony(widget: Option<Widget>) -> OptionBox<(GString, GString, GString)> {
-    let ampltd_input = widget?.downcast::<Input>().ok()?;
-    let frqnz_input = ampltd_input.next_sibling()?.downcast::<Input>().ok()?;
-    let phi_input = frqnz_input.next_sibling()?.downcast::<Input>().ok()?;
-    let widget = phi_input.next_sibling();
-
-    Some((
-        widget,
-        (ampltd_input.text(), frqnz_input.text(), phi_input.text()),
-    ))
-}
 
 pub fn parse_f64(input: &str, err_msg: &'static str) -> ResultParse<f64> {
     input.parse::<f64>().map_err(|_| err_msg)
@@ -66,13 +79,6 @@ pub fn set_harmony(anchor: &GtkBox, ampltd: f64, frqnz: f64, phi: f64) {
     anchor.append(&Input::new_default("phi", DEFAULT_WIDTH, &phi.to_string()));
 }
 
-pub fn parse_harmony(inputs: StringHarmony) -> ResultParse<(f64, f64, f64)> {
-    let ampltd = parse_f64(&inputs.0, ERROR_PARSE_AMPLITUDE)?;
-    let frqnz = parse_f64(&inputs.1, ERROR_PARSE_FREQUENCY)?;
-    let phi = parse_f64(&inputs.2, ERROR_PARSE_PHI)?;
-
-    Ok((ampltd, frqnz, phi))
-}
 
 pub const DRAW_DEFAULT_DIMS: (u32, u32) = (800, 600);
 pub const DRAW_YS_STEP: f64 = 10.0;
@@ -94,6 +100,22 @@ pub fn draw_generic(
         }
     };
 
+    let fourier = discrete_fourier(xs.end, &signal)
+        .into_iter()
+        .enumerate()
+        .map(|(i, c)| Harmony {
+            ampltd: c.norm(),
+            phi: f64::atan(c.re / c.im),
+            frqnz: i as f64,
+        })
+        .collect::<Vec<_>>();
+    let poly = Polyharmonic {
+        harmonics: fourier,
+        n: xs.end,
+    };
+    let fourier_signal: Vec<f64> = xs.clone().map(poly.function()).collect();
+    
+
     let root_area = BitMapBackend::new(&path, DRAW_DEFAULT_DIMS).into_drawing_area();
     root_area.fill(&WHITE)?;
 
@@ -104,6 +126,7 @@ pub fn draw_generic(
 
     ctx.configure_mesh().draw()?;
 
+    ctx.draw_series(LineSeries::new(xs.clone().zip(fourier_signal), &RED))?;
     ctx.draw_series(LineSeries::new(xs.zip(signal), &BLUE))?;
 
     // ctx.draw_series(PointSeries::of_element(

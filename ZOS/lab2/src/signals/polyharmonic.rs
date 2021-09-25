@@ -1,41 +1,90 @@
 use crate::signals::*;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct Polyharmonic {
-    pub harmonics: [Harmonic; 3],
+    pub harmonics: Vec<Harmony<f64>>,
     pub n: u64,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct Harmony<T> {
+    pub ampltd: T,
+    pub frqnz: T,
+    pub phi: T,
+}
+
+impl Harmony<f64> {
+    fn function(&self, n_big: u64) -> Box<dyn Fn(u64) -> f64> {
+        let harm = *self; // self-harm, haha
+        Box::new(move |n| {
+            harm.ampltd * 
+                f64::sin((2.0 * PI * harm.frqnz * n as f64) / n_big as f64 + harm.phi)
+        })
+    }
+}
+
+fn get_harmony(widget: Option<Widget>) -> OptionBox<Harmony<GString>> {
+    let ampltd_input = widget?.downcast::<Input>().ok()?;
+    let frqnz_input = ampltd_input.next_sibling()?.downcast::<Input>().ok()?;
+    let phi_input = frqnz_input.next_sibling()?.downcast::<Input>().ok()?;
+    let widget = phi_input.next_sibling();
+
+    Some((
+        widget,
+        Harmony {
+            ampltd: ampltd_input.text(), 
+            frqnz: frqnz_input.text(), 
+            phi: phi_input.text(),
+        }
+    ))
+}
+
+
+fn parse_harmony(inputs: Harmony<GString>) -> ResultParse<Harmony<f64>> {
+    let ampltd = parse_f64(&inputs.ampltd, ERROR_PARSE_AMPLITUDE)?;
+    let frqnz = parse_f64(&inputs.frqnz, ERROR_PARSE_FREQUENCY)?;
+    let phi = parse_f64(&inputs.phi, ERROR_PARSE_PHI)?;
+
+    Ok(Harmony {
+        ampltd,
+        frqnz,
+        phi,
+    })
+}
+
 impl Polyharmonic {
-    pub fn raise_anchor(anchor: &GtkBox) -> Option<([StringHarmony; 3], GString)> {
-        let (widget, _) = get_child(anchor)?;
+    pub fn raise_anchor(anchor: &GtkBox) -> Option<(Vec<Harmony<GString>>, GString)> {
+        let (mut widget, _) = get_child(anchor)?;
+        let mut harmony;
+        let mut harmonies = Vec::new();
 
-        let (widget, harm_1) = get_harmony(widget)?;
-        let (widget, _) = get_separator(widget)?;
+        for _ in 0..3 {
+            let tmp = get_harmony(widget)?;
+            widget = tmp.0;
+            harmony = tmp.1;
 
-        let (widget, harm_2) = get_harmony(widget)?;
-        let (widget, _) = get_separator(widget)?;
+            let tmp = get_separator(widget)?;
+            widget = tmp.0;
 
-        let (widget, harm_3) = get_harmony(widget)?;
-        let (widget, _) = get_separator(widget)?;
+            harmonies.push(harmony);
+        }
 
         let (_widget, n) = get_discrete(widget)?;
 
-        Some(([harm_1, harm_2, harm_3], n))
+        Some((harmonies, n))
     }
 
-    pub fn parse_anchor(inputs: ([StringHarmony; 3], GString)) -> ResultParse<Self> {
-        let [h1, h2, h3] = inputs.0;
-        let harm1 = parse_harmony(h1)?;
-        let harm2 = parse_harmony(h2)?;
-        let harm3 = parse_harmony(h3)?;
+    pub fn parse_anchor(inputs: (Vec<Harmony<GString>>, GString)) -> ResultParse<Self> {
+
+        let harmonies = inputs
+            .0
+            .into_iter()
+            .map(parse_harmony)
+            .collect::<ResultParse<Vec<Harmony<f64>>>>()?;
         let n = parse_discrete(&inputs.1)?;
+
         Ok(Polyharmonic {
-            harmonics: [
-                Harmonic::new(harm1, n),
-                Harmonic::new(harm2, n),
-                Harmonic::new(harm3, n),
-            ],
+            harmonics: harmonies,
             n,
         })
     }
@@ -65,11 +114,12 @@ impl SignalBox for Polyharmonic {
 
 impl Signal for Polyharmonic {
     fn function(&self) -> Box<dyn Fn(u64) -> f64> {
-        let harms = (*self).harmonics;
-        Box::new(move |n| harms.iter().map(|harm| harm.function()(n)).sum())
+        let poly = self.clone();
+        Box::new(move |n| poly.harmonics.iter().map(|harm| harm.function(poly.n)(n)).sum())
     }
 
     fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(0..self.n + 1, None, self.function(), path)
     }
 }
+

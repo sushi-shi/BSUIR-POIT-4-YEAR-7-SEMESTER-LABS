@@ -4,7 +4,7 @@ use plotters::prelude::*;
 use crate::widgets::input::Input;
 
 mod harmonic;
-mod linear_polyharmonic;
+// mod linear_polyharmonic;
 mod polyharmonic;
 mod sawtooth;
 mod triangular;
@@ -16,7 +16,7 @@ pub mod widget;
 mod fourier;
 
 pub use harmonic::*;
-pub use linear_polyharmonic::*;
+// pub use linear_polyharmonic::*;
 pub use polyharmonic::*;
 pub use sawtooth::*;
 pub use triangular::*;
@@ -31,6 +31,7 @@ pub use std::ops::Range;
 
 type OptionBox<T> = Option<(Option<Widget>, T)>;
 type ResultParse<T> = Result<T, &'static str>;
+
 type StringHarmony = (GString, GString, GString);
 
 pub trait Named {

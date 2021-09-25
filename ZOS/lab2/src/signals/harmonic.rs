@@ -29,14 +29,14 @@ impl Harmonic {
 
     fn raise_anchor(anchor: &GtkBox) -> Option<((GString, GString, GString), GString)> {
         let (widget, ()) = get_child(anchor)?;
-        let (widget, (ampltd, frqnz, phi)) = get_harmony(widget)?;
+        let (widget, (ampltd, frqnz, phi)) = utils::get_harmony(widget)?;
         let (widget, ()) = get_separator(widget)?;
         let (_widget, n) = get_discrete(widget)?;
         Some(((ampltd, frqnz, phi), n))
     }
 
     pub fn parse_anchor(inputs: ((GString, GString, GString), GString)) -> ResultParse<Harmonic> {
-        let (ampltd, frqnz, phi) = parse_harmony(inputs.0)?;
+        let (ampltd, frqnz, phi) = utils::parse_harmony(inputs.0)?;
         let n = parse_discrete(&inputs.1)?;
 
         Ok(Harmonic {
