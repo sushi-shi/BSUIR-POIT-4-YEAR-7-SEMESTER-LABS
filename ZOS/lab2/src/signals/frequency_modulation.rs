@@ -27,10 +27,7 @@ impl FrequencyMod {
         let harm2 = parse_harmony(h2)?;
         let n = parse_discrete(&inputs.1)?;
         Ok(FrequencyMod {
-            harmonics: [
-                Harmonic::new(harm1, n),
-                Harmonic::new(harm2, n),
-            ],
+            harmonics: [Harmonic::new(harm1, n), Harmonic::new(harm2, n)],
             n,
         })
     }
@@ -63,17 +60,21 @@ impl Signal for FrequencyMod {
         let message = (*self).harmonics[1];
         Box::new(move |n| {
             let t = n as f64 / n_big;
-            // let x = 2.0 * PI * carrier.frqnz * t; 
+            // let x = 2.0 * PI * carrier.frqnz * t;
             // let y = 2.0 * PI * message.ampltd;
             // let z: f64 = (0..=n).map(message.function()).sum();
-            
-           carrier.ampltd * f64::cos(2.0 * PI * carrier.frqnz * t + carrier.phi - 10.0 * message.ampltd / message.frqnz * f64::cos(2.0 * PI * message.frqnz * t))
-           // carrier.ampltd * f64::cos(x + y * z)
+
+            carrier.ampltd
+                * f64::cos(
+                    2.0 * PI * carrier.frqnz * t + carrier.phi
+                        - 10.0 * message.ampltd / message.frqnz
+                            * f64::cos(2.0 * PI * message.frqnz * t),
+                )
+            // carrier.ampltd * f64::cos(x + y * z)
         })
     }
 
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0..self.n + 1, None, self.function(), path)
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+        draw_generic(0..self.n + 1, None, self.function(), path, path_frqnz)
     }
 }
-

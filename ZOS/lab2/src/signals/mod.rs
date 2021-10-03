@@ -5,24 +5,24 @@ use crate::widgets::input::Input;
 
 mod harmonic;
 // mod linear_polyharmonic;
+mod amplitude_modulation;
+mod fourier;
+mod frequency_modulation;
 mod polyharmonic;
 mod sawtooth;
 mod triangular;
 mod utils;
 mod wav;
-mod amplitude_modulation;
-mod frequency_modulation;
 pub mod widget;
-mod fourier;
 
 pub use harmonic::*;
 // pub use linear_polyharmonic::*;
+pub use amplitude_modulation::*;
+pub use frequency_modulation::*;
 pub use polyharmonic::*;
 pub use sawtooth::*;
 pub use triangular::*;
 pub use wav::*;
-pub use amplitude_modulation::*;
-pub use frequency_modulation::*;
 
 pub use utils::*;
 
@@ -49,7 +49,7 @@ pub trait SignalBox {
 
 pub trait Signal {
     fn function(&self) -> Box<dyn Fn(u64) -> f64>;
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>>;
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>>;
 }
 
 impl<S: Signal + ?Sized> Signal for Box<S> {
@@ -57,8 +57,8 @@ impl<S: Signal + ?Sized> Signal for Box<S> {
         (**self).function()
     }
 
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        (**self).draw(path)
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+        (**self).draw(path, path_frqnz)
     }
 }
 

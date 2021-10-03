@@ -17,8 +17,7 @@ impl Harmony<f64> {
     fn function(&self, n_big: u64) -> Box<dyn Fn(u64) -> f64> {
         let harm = *self; // self-harm, haha
         Box::new(move |n| {
-            harm.ampltd * 
-                f64::sin((2.0 * PI * harm.frqnz * n as f64) / n_big as f64 + harm.phi)
+            harm.ampltd * f64::sin((2.0 * PI * harm.frqnz * n as f64) / n_big as f64 + harm.phi)
         })
     }
 }
@@ -32,24 +31,19 @@ fn get_harmony(widget: Option<Widget>) -> OptionBox<Harmony<GString>> {
     Some((
         widget,
         Harmony {
-            ampltd: ampltd_input.text(), 
-            frqnz: frqnz_input.text(), 
+            ampltd: ampltd_input.text(),
+            frqnz: frqnz_input.text(),
             phi: phi_input.text(),
-        }
+        },
     ))
 }
-
 
 fn parse_harmony(inputs: Harmony<GString>) -> ResultParse<Harmony<f64>> {
     let ampltd = parse_f64(&inputs.ampltd, ERROR_PARSE_AMPLITUDE)?;
     let frqnz = parse_f64(&inputs.frqnz, ERROR_PARSE_FREQUENCY)?;
     let phi = parse_f64(&inputs.phi, ERROR_PARSE_PHI)?;
 
-    Ok(Harmony {
-        ampltd,
-        frqnz,
-        phi,
-    })
+    Ok(Harmony { ampltd, frqnz, phi })
 }
 
 impl Polyharmonic {
@@ -75,7 +69,6 @@ impl Polyharmonic {
     }
 
     pub fn parse_anchor(inputs: (Vec<Harmony<GString>>, GString)) -> ResultParse<Self> {
-
         let harmonies = inputs
             .0
             .into_iter()
@@ -115,11 +108,15 @@ impl SignalBox for Polyharmonic {
 impl Signal for Polyharmonic {
     fn function(&self) -> Box<dyn Fn(u64) -> f64> {
         let poly = self.clone();
-        Box::new(move |n| poly.harmonics.iter().map(|harm| harm.function(poly.n)(n)).sum())
+        Box::new(move |n| {
+            poly.harmonics
+                .iter()
+                .map(|harm| harm.function(poly.n)(n))
+                .sum()
+        })
     }
 
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0..self.n + 1, None, self.function(), path)
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+        draw_generic(0..self.n + 1, None, self.function(), path, path_frqnz)
     }
 }
-

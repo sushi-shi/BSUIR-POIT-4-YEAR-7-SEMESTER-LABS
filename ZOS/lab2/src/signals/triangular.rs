@@ -28,7 +28,9 @@ impl Triangular {
         let step = DEFAULT_DISCREDITATION / n;
         let len = (DEFAULT_DISCREDITATION as f64 / (frqnz * 4.0)) as usize;
         let delta = height / len as f64;
-        let signal = (0..=len).map(|x| x as f64 * delta).collect();
+        let signal = (-height as usize / 2..=len)
+            .map(|x| x as f64 * delta)
+            .collect();
 
         Ok(Triangular {
             signal,
@@ -103,12 +105,13 @@ impl Signal for Triangular {
         })
     }
 
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(
             0..self.n as u64 + 1,
             Some(-1.0 - self.height..self.height + 1.0),
             self.function(),
             path,
+            path_frqnz,
         )
     }
 }

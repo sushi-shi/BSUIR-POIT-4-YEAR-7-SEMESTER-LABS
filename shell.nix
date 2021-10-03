@@ -34,5 +34,10 @@ stdenv.mkDerivation rec {
         libGL
 
         SDL2 SDL2_gfx SDL2_image
+
+        gfortran
+        openblas
+        gdb
+        python3
     ];
 }

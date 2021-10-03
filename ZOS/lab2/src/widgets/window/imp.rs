@@ -24,6 +24,9 @@ pub struct Window {
 
     #[template_child]
     pub picture: TemplateChild<Picture>,
+
+    #[template_child]
+    pub picture_frqnz: TemplateChild<Picture>,
 }
 
 // The central trait for subclassing a GObject
@@ -52,6 +55,7 @@ impl ObjectImpl for Window {
         let signal_selector = self.signal_selector.get();
         let anchor = self.anchor.get();
         let picture = self.picture.get();
+        let picture_frqnz = self.picture_frqnz.get();
 
         signals::widget::initialize(&signal_selector);
 
@@ -67,6 +71,7 @@ impl ObjectImpl for Window {
                 @weak anchor,
 
                 @weak picture,
+                @weak picture_frqnz,
                 => move |_button: &Button| {
 
             match signals::widget::get(&anchor, &signal_selector) {
@@ -77,8 +82,14 @@ impl ObjectImpl for Window {
                     let buffer = tmp.path().join("graph.png");
                     let path: &str = buffer.to_str().unwrap();
 
-                    let _ = signals::Signal::draw(&signal, path);
+                    let tmp = TempDir::new("signal_drawing").expect("Coulnd't create temporary directory");
+
+                    let buffer = tmp.path().join("graph.png");
+                    let path_frqnz: &str = buffer.to_str().unwrap();
+
+                    let _ = signals::Signal::draw(&signal, path, path_frqnz);
                     picture.set_filename(Some(path));
+                    picture_frqnz.set_filename(Some(path_frqnz));
                 }
             };
         }));

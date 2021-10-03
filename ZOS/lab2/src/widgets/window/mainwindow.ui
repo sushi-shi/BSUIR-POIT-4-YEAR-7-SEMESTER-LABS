@@ -28,6 +28,13 @@
                 <property name="label">Calculate!</property>
               </object>
             </child>
+
+            <child>
+              <object class="GtkPicture" id="picture_frqnz">
+                <property name="can-focus">0</property>
+              </object>
+            </child>
+
           </object>
         </child>
         <child>

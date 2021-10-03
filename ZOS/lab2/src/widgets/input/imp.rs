@@ -1,6 +1,8 @@
+use crate::signals::*;
+use glib::clone;
 use gtk::prelude::*;
 use gtk::subclass::prelude::*;
-use gtk::{glib, CompositeTemplate, Entry, Label};
+use gtk::{glib, Button, CompositeTemplate, Entry, Label};
 
 // Object holding the state
 #[derive(Default, CompositeTemplate)]
@@ -11,6 +13,12 @@ pub struct Input {
 
     #[template_child(id = "input_entry")]
     pub entry: TemplateChild<Entry>,
+
+    #[template_child(id = "input_minus")]
+    pub minus: TemplateChild<Button>,
+
+    #[template_child(id = "input_plus")]
+    pub plus: TemplateChild<Button>,
 }
 
 // The central trait for subclassing a GObject
@@ -30,7 +38,29 @@ impl ObjectSubclass for Input {
 }
 
 // Trait shared by all GObjects
-impl ObjectImpl for Input {}
+impl ObjectImpl for Input {
+    fn constructed(&self, obj: &Self::Type) {
+        self.parent_constructed(obj);
+
+        let entry = self.entry.get();
+
+        self.minus.connect_clicked(clone!(
+            @weak entry
+            => move |_button: &Button| {
+                entry.set_text(
+                    &(parse_f64(&entry.text(), "").unwrap() - 1.).to_string()
+                );
+        }));
+
+        self.plus.connect_clicked(clone!(
+            @weak entry
+            => move |_button: &Button| {
+                entry.set_text(
+                    &(parse_f64(&entry.text(), "").unwrap() + 1.).to_string()
+                );
+        }));
+    }
+}
 
 // Trait shared by all widgets
 impl WidgetImpl for Input {

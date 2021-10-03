@@ -27,10 +27,7 @@ impl AmplitudeMod {
         let harm2 = parse_harmony(h2)?;
         let n = parse_discrete(&inputs.1)?;
         Ok(AmplitudeMod {
-            harmonics: [
-                Harmonic::new(harm1, n),
-                Harmonic::new(harm2, n),
-            ],
+            harmonics: [Harmonic::new(harm1, n), Harmonic::new(harm2, n)],
             n,
         })
     }
@@ -70,8 +67,7 @@ impl Signal for AmplitudeMod {
         })
     }
 
-    fn draw(&self, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0..self.n + 1, None, self.function(), path)
+    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+        draw_generic(0..self.n + 1, None, self.function(), path, path_frqnz)
     }
 }
-

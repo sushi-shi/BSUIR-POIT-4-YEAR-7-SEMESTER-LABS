@@ -10,5 +10,15 @@
       <object class="GtkEntry" id="input_entry">
       </object>
     </child>
+    <child>
+      <object class="GtkButton" id="input_minus">
+        <property name="label">-</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="input_plus">
+        <property name="label">+</property>
+      </object>
+    </child>
   </template>
 </interface>

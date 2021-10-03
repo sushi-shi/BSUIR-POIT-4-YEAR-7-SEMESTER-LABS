@@ -13,7 +13,7 @@ fn discrete_fourier_k(n_big: u64, vec: &Vec<f64>, k: u64) -> Complex<f64> {
     let k = k as f64;
     (0..n_big).map(|n| {
         let alpha = 2.0 * PI * (n as f64) * k / n_big as f64;
-        Complex::new(f64::cos(alpha), -f64::sin(alpha)).scale(vec[n as usize])
+        Complex::new(f64::cos(alpha), f64::sin(alpha)).scale(vec[n as usize])
     }).sum::<Complex<f64>>()
 }
 
