@@ -37,7 +37,13 @@ impl Element {
     }
 }
 
-type State = [u8; 3];
+struct State {
+    state: [u8; 3],
+
+    loaded: [usize; 3],
+    consumed: [usize; 3],
+    rejected: usize,
+}
 
 
 fn var36(ro: f32, qsize: u8, pi1: f32, pi2: f32) -> System {
@@ -98,14 +104,21 @@ fn step_rec(
 
     match graph.node_weight(node).unwrap() {
         Element::Generator(_) => {
-            recurse(node, state, message)
+            let first_message = message;
+            let (mut state, message) = recurse(node, state, message);
+            if let Message::IsPending = message {
+                if let Message::IsPending = first_message {
+                    state.rejected += 1;
+                }
+            }
+            (state, message)
         },
 
         Element::Queue(no, max) => {
             // Propagate queued messages
             let message = if let Message::IsConsumed = message {
-                if state[*no] > 0 {
-                    state[*no] -= 1;
+                if state.state[*no] > 0 {
+                    state.state[*no] -= 1;
                     Message::IsPending
                 } else {
                     Message::IsConsumed
@@ -118,8 +131,8 @@ fn step_rec(
 
             // Consume message if there is a free space
             match message {
-                Message::IsPending if state[*no] < *max => {
-                    state[*no] += 1;
+                Message::IsPending if state.state[*no] < *max => {
+                    state.state[*no] += 1;
                     (state, Message::IsConsumed)
                 }
                 Message::IsPending => (state, message),
@@ -128,23 +141,29 @@ fn step_rec(
         }
         Element::Retractor(no, chance) => {
             let (state, message) = match message {
-                Message::IsPending if state[*no] == 1 => {
+                Message::IsPending if state.state[*no] == 1 => {
                     if cointoss < *chance { 
-                        // Message is consumed, so our state, in essence, hasn't changed
+                        state.loaded[*no] += 1;
                         (state, Message::IsPending)
                     } else { 
+                        state.consumed[*no] += 1;
+                        state.loaded[*no] += 1;
                         (state, Message::IsConsumed)
                     } 
                 },
                 Message::IsPending => {
-                    state[*no] = 1;
+                    // Didn't have a message, now consumed one
+                    state.loaded[*no] += 1;
+                    state.state[*no] = 1;
                     (state, Message::IsConsumed)
                 },
-                Message::IsConsumed if state[*no] == 1 => {
+                Message::IsConsumed if state.state[*no] == 1 => {
                     if cointoss < *chance {
+                        state.loaded[*no] += 1;
                         (state, Message::IsConsumed)
                     } else {
-                        state[*no] = 0;
+                        state.state[*no] = 0;
+                        state.consumed[*no] += 1;
                         (state, Message::IsConsumed)
                     }
                 }
@@ -158,7 +177,7 @@ fn step_rec(
 }
 
 pub struct Simulation {
-    pub states: Vec<(State, f32)>,
+    pub states: Vec<([u8; 3], f32)>,
 
     pub chance_reject: f32,
     pub chance_block: f32,
@@ -173,7 +192,7 @@ pub struct Simulation {
 }
 
 
-pub fn state_to_int(state: State) -> String {
+pub fn state_to_int(state: [u8; 3]) -> String {
     state
         .iter()
         .map(|x| x.to_string())
@@ -190,15 +209,33 @@ pub fn simulate(ro: f32, qsize: u8, pi1: f32, pi2: f32) -> Simulation {
 
     let sys = var36(ro, qsize, pi1, pi2);
     let mut state = [0; 3];
+    let mut state = State {
+        state,
+
+        loaded: [0; 3],
+        consumed: [0; 3],
+        rejected: 0,
+    };
+
+
     let mut counters = HashMap::new();
+    let mut whole_queue_size: f32 = 0.;
+    let mut whole_system_size: f32 = 0.;
 
     for _ in 0..ITERATIONS {
-        let counter = counters.entry(state).or_insert(0);
+        let counter = counters.entry(state.state).or_insert(0);
         *counter += 1;
+        whole_queue_size += state.state[0] as f32;
+        whole_system_size += state.state.iter().sum::<u8>() as f32;
+
         state = step(&sys, &mut r, state);
     }
 
     let states: Vec<_> = counters.into_iter().map(|(state, counter)| (state, counter as f32 / ITERATIONS as f32)).collect();
+
+    let whole_consumed_1 = state.consumed[1] as f32;
+    let whole_consumed_2 = state.consumed[2] as f32;
+
 
     let chance_reject: f32;
     let chance_block: f32;
@@ -211,30 +248,26 @@ pub fn simulate(ro: f32, qsize: u8, pi1: f32, pi2: f32) -> Simulation {
     let average_channel_load_1: f32;
     let average_channel_load_2: f32;
     
-    let filter_sum = |f: Box<dyn Fn(&State) -> _>| states.iter().filter(|(state, _)| f(state)).map(|x| x.1).sum::<f32>();
-
     chance_block = 0.;
-    chance_reject = sys.ro + filter_sum(Box::new(|state| state[1] == 1 && state[2] == 1 && state[0] == sys.qsize)) * sys.ro;
+    chance_reject = state.rejected as f32 / ITERATIONS as f32;
 
-    let when_2 = filter_sum(Box::new(|state| state[1] == 1 && state[2] == 1));
-    let when_1_1 = filter_sum(Box::new(|state| state[1] == 1));
-    let when_1_2 = filter_sum(Box::new(|state| state[2] == 1));
-    absolute_throughput = 
-        2. * when_2 * (1. - sys.pi1) * (1. - sys.pi2) 
-        + when_1_1 * (1. - sys.pi1) 
-        + when_1_2 * (1. - sys.pi2);
+    let absolute_throughput_queue = whole_consumed_1 / ITERATIONS as f32;
+    println!("{}",absolute_throughput_queue);
+    absolute_throughput = (whole_consumed_1 + whole_consumed_2) / ITERATIONS as f32;
 
-    relative_throughput = absolute_throughput / sys.ro;
+
+    relative_throughput = 1. - chance_reject;
 
     average_queue_num = 
-        (1..=sys.qsize).map(|n| n as f32 * filter_sum(Box::new(move |state| state[0] == n))).sum::<f32>();
+        whole_queue_size / ITERATIONS as f32;
     average_system_num = 
-        states.iter().map(|(state, c)| (state[0] + state[1] + state[2], c)).map(|(n, c)| n as f32 * c).sum::<f32>();
-    average_queue_time = average_queue_num / absolute_throughput;
+        whole_system_size / ITERATIONS as f32;
+
+    average_queue_time = average_queue_num / absolute_throughput_queue;
     average_system_time = average_system_num / absolute_throughput;
     
-    average_channel_load_1 = filter_sum(Box::new(|state| state[1] == 1));
-    average_channel_load_2 = filter_sum(Box::new(|state| state[2] == 1));
+    average_channel_load_1 = state.loaded[1] as f32 / ITERATIONS as f32;
+    average_channel_load_2 = state.loaded[2] as f32 / ITERATIONS as f32;
 
     Simulation {
         states,

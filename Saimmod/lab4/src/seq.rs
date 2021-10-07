@@ -1,4 +1,4 @@
-const DEFAULT_ARGUMENTS_2: (u64, u64, u64) = (1103515245, 345345, 54354342);
+const DEFAULT_ARGUMENTS_2: (u64, u64, u64) = (1103515245, 345345, 543543422);
 
 pub struct LemerSequence {
     a: u64,
@@ -61,4 +61,3 @@ impl Iterator for Random {
         self.lemer.next().map(|v| v as f32 / self.lemer.m as f32)
     }
 }
-
