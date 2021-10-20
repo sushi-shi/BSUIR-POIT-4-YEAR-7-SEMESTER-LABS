@@ -74,7 +74,19 @@ impl Signal for FrequencyMod {
         })
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0..self.n + 1, None, self.function(), path, path_frqnz)
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        draw_generic(
+            0..self.n + 1,
+            None,
+            self.function(),
+            path,
+            path_frqnz,
+            path_phi,
+        )
     }
 }

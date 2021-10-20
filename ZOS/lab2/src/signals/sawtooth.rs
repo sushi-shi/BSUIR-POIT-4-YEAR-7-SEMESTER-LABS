@@ -94,13 +94,19 @@ impl Signal for Sawtooth {
         Box::new(move |n| tooth.signal[n as usize * tooth.step % tooth.signal.len()])
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(
             0..self.n as u64 + 1,
             Some(0. ..2. * self.height),
             self.function(),
             path,
             path_frqnz,
+            path_phi,
         )
     }
 }

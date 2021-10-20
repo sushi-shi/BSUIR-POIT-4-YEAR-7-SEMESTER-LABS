@@ -105,13 +105,19 @@ impl Signal for Triangular {
         })
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(
             0..self.n as u64 + 1,
             Some(-1.0 - self.height..self.height + 1.0),
             self.function(),
             path,
             path_frqnz,
+            path_phi,
         )
     }
 }

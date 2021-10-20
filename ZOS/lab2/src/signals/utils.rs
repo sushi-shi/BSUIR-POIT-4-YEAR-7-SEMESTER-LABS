@@ -1,4 +1,4 @@
-use crate::signals::fourier::discrete_fourier;
+use crate::signals::fourier::{discrete_fourier, inverse_discrete_fourier};
 use crate::signals::*;
 
 pub const ERROR_PARSE_AMPLITUDE: &str = "Couldn't parse amplitude";
@@ -75,8 +75,8 @@ pub fn set_harmony(anchor: &GtkBox, ampltd: f64, frqnz: f64, phi: f64) {
     anchor.append(&Input::new_default("phi", DEFAULT_WIDTH, &phi.to_string()));
 }
 
-pub const DRAW_DEFAULT_DIMS: (u32, u32) = (800, 600);
-pub const DRAW_DEFAULT_DIMS_FRQNZ: (u32, u32) = (400, 200);
+pub const DRAW_DEFAULT_DIMS: (u32, u32) = (1600, 1200);
+pub const DRAW_DEFAULT_DIMS_FRQNZ: (u32, u32) = (1600, 800);
 pub const DRAW_YS_STEP: f64 = 10.0;
 
 pub fn draw_generic(
@@ -86,6 +86,7 @@ pub fn draw_generic(
 
     path: &str,
     path_frqnz: &str,
+    path_phi: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let signal: Vec<f64> = xs.clone().map(signal).collect();
     let ys = match ys {
@@ -97,6 +98,7 @@ pub fn draw_generic(
             min..max
         }
     };
+    let n_big = xs.end as usize;
     let xs_frqnz = xs.start..xs.end / 2;
     let ys_frqnz = (0. ..ys.end).step((ys.end - ys.start) / DRAW_YS_STEP);
 
@@ -104,18 +106,19 @@ pub fn draw_generic(
 
     let fourier = discrete_fourier(xs.end, &signal)
         .into_iter()
+        .take(n_big / 2)
         .enumerate()
         .map(|(i, c)| Harmony {
             ampltd: c.norm(),
-            phi: f64::atan(c.re / c.im),
+            phi: -f64::atan(c.im / c.re),
             frqnz: i as f64,
         })
         .collect::<Vec<_>>();
-    let poly = Polyharmonic {
-        harmonics: fourier.clone(),
-        n: xs.end,
-    };
-    let fourier_signal = xs.clone().map(poly.function());
+
+    let fourier_signal = inverse_discrete_fourier(n_big, &(discrete_fourier(xs.end, &signal)));
+    for (sig, fsig) in signal.iter().zip(fourier_signal.iter()).take(5) {
+        println!("{:?}, {:?}", sig, fsig);
+    }
 
     let root_area = BitMapBackend::new(&path, DRAW_DEFAULT_DIMS).into_drawing_area();
     root_area.fill(&WHITE)?;
@@ -137,7 +140,7 @@ pub fn draw_generic(
     let mut ctx = ChartBuilder::on(&root_area)
         .set_label_area_size(LabelAreaPosition::Left, 50)
         .set_label_area_size(LabelAreaPosition::Bottom, 20)
-        .build_cartesian_2d(xs_frqnz, ys_frqnz)?;
+        .build_cartesian_2d(xs_frqnz.clone(), ys_frqnz.clone())?;
 
     ctx.configure_mesh().draw()?;
 
@@ -147,7 +150,28 @@ pub fn draw_generic(
                 (harmony.frqnz as u64, 0.),
                 (harmony.frqnz as u64, harmony.ampltd),
             ],
-            &GREEN,
+            &RED,
+        ))?;
+    }
+
+    // PHI
+    let root_area = BitMapBackend::new(&path_phi, DRAW_DEFAULT_DIMS_FRQNZ).into_drawing_area();
+    root_area.fill(&WHITE)?;
+
+    let mut ctx = ChartBuilder::on(&root_area)
+        .set_label_area_size(LabelAreaPosition::Left, 50)
+        .set_label_area_size(LabelAreaPosition::Bottom, 20)
+        .build_cartesian_2d(xs_frqnz, (-0.5 * PI..0.5 * PI).step(0.1))?;
+
+    ctx.configure_mesh().draw()?;
+
+    for harmony in &fourier {
+        ctx.draw_series(LineSeries::new(
+            vec![
+                (harmony.frqnz as u64, 0.),
+                (harmony.frqnz as u64, harmony.phi),
+            ],
+            &RED,
         ))?;
     }
 

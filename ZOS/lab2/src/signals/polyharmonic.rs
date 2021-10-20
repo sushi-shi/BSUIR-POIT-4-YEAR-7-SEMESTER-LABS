@@ -1,9 +1,16 @@
 use crate::signals::*;
 
+#[derive(Clone, Debug, Copy)]
+pub enum Function {
+    Cos,
+    Sin,
+}
+
 #[derive(Clone, Debug)]
 pub struct Polyharmonic {
     pub harmonics: Vec<Harmony<f64>>,
     pub n: u64,
+    pub f_ty: Function,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -14,10 +21,17 @@ pub struct Harmony<T> {
 }
 
 impl Harmony<f64> {
-    fn function(&self, n_big: u64) -> Box<dyn Fn(u64) -> f64> {
+    fn function_sin(&self, n_big: u64) -> Box<dyn Fn(u64) -> f64> {
         let harm = *self; // self-harm, haha
         Box::new(move |n| {
             harm.ampltd * f64::sin((2.0 * PI * harm.frqnz * n as f64) / n_big as f64 + harm.phi)
+        })
+    }
+
+    fn function_cos(&self, n_big: u64) -> Box<dyn Fn(u64) -> f64> {
+        let harm = *self; // self-harm, haha
+        Box::new(move |n| {
+            harm.ampltd * f64::cos((2.0 * PI * harm.frqnz * n as f64) / n_big as f64 + harm.phi)
         })
     }
 }
@@ -79,6 +93,7 @@ impl Polyharmonic {
         Ok(Polyharmonic {
             harmonics: harmonies,
             n,
+            f_ty: Function::Sin,
         })
     }
 }
@@ -111,12 +126,27 @@ impl Signal for Polyharmonic {
         Box::new(move |n| {
             poly.harmonics
                 .iter()
-                .map(|harm| harm.function(poly.n)(n))
+                .map(|harm| match poly.f_ty {
+                    Function::Sin => harm.function_sin(poly.n)(n),
+                    Function::Cos => harm.function_cos(poly.n)(n),
+                })
                 .sum()
         })
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
-        draw_generic(0..self.n + 1, None, self.function(), path, path_frqnz)
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        draw_generic(
+            0..self.n + 1,
+            None,
+            self.function(),
+            path,
+            path_frqnz,
+            path_phi,
+        )
     }
 }

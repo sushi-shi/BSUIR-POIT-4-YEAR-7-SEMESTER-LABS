@@ -55,13 +55,19 @@ impl Signal for Wav {
         Box::new(move |n| wav.samples[n as usize] as f64)
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(
             0..self.samples.len() as u64 / 400,
             None,
             self.function(),
             path,
             path_frqnz,
+            path_phi,
         )
     }
 }

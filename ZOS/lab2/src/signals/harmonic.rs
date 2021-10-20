@@ -70,13 +70,19 @@ impl Signal for Harmonic {
         })
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         draw_generic(
             0..self.n + 1,
             Some(-self.ampltd..self.ampltd),
             self.function(),
             path,
             path_frqnz,
+            path_phi,
         )
     }
 }

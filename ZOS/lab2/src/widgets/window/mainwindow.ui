@@ -29,16 +29,12 @@
               </object>
             </child>
 
-            <child>
-              <object class="GtkPicture" id="picture_frqnz">
-                <property name="can-focus">0</property>
-              </object>
-            </child>
 
           </object>
         </child>
         <child>
           <object class="GtkBox" id="img_box">
+            <property name="orientation">vertical</property>
             <property name="hexpand">1</property>
             <child>
               <object class="GtkPicture" id="picture">
@@ -47,6 +43,24 @@
             </child>
           </object>
         </child>
+
+        <child>
+          <object class="GtkBox" id="img_a__box">
+            <property name="orientation">vertical</property>
+              <child>
+                <object class="GtkPicture" id="picture_frqnz">
+                  <property name="can-focus">0</property>
+                </object>
+              </child>
+              
+              <child>
+                <object class="GtkPicture" id="picture_phi">
+                  <property name="can-focus">0</property>
+                </object>
+              </child>
+          </object>
+        </child>
+
       </object>
     </child>
   </template>

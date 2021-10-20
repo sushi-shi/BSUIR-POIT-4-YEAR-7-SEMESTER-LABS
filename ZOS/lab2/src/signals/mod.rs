@@ -49,7 +49,12 @@ pub trait SignalBox {
 
 pub trait Signal {
     fn function(&self) -> Box<dyn Fn(u64) -> f64>;
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>>;
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>>;
 }
 
 impl<S: Signal + ?Sized> Signal for Box<S> {
@@ -57,8 +62,13 @@ impl<S: Signal + ?Sized> Signal for Box<S> {
         (**self).function()
     }
 
-    fn draw(&self, path: &str, path_frqnz: &str) -> Result<(), Box<dyn std::error::Error>> {
-        (**self).draw(path, path_frqnz)
+    fn draw(
+        &self,
+        path: &str,
+        path_frqnz: &str,
+        path_phi: &str,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        (**self).draw(path, path_frqnz, path_phi)
     }
 }
 
