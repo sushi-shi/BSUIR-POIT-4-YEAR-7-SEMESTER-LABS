@@ -351,8 +351,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     chance_reject = filter_sum(Box::new(|state| {
         state[1] == 1 && state[2] == 1 && state[0] == 2
     })) * sys.pi1
-        * sys.pi2
-        * (1. - sys.ro);
+        * sys.pi2;
 
     let when_1_1 = filter_sum(Box::new(|state| state[1] == 1));
     let when_1_2 = filter_sum(Box::new(|state| state[2] == 1));
