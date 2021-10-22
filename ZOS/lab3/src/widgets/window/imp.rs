@@ -5,6 +5,7 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 use gtk::{Box as GtkBox, Scale, Button, ComboBoxText, CompositeTemplate, Picture, Switch};
 
+use crate::signals::*;
 use crate::*;
 use crate::signals::{draw_generic, apply_filters};
 use crate::widgets::input::Input;
@@ -125,13 +126,18 @@ impl ObjectImpl for Window {
                     let buffer = tmp.path().join("graph.png");
                     let path: &str = buffer.to_str().unwrap();
 
+                    let tmp = TempDir::new("signal_drawing").expect("Coulnd't create temporary directory");
+
+                    let buffer = tmp.path().join("graph.png");
+                    let path_frq: &str = buffer.to_str().unwrap();
+
                     let signal = signal.signal();
                     let ys = {
                         let max = signal.iter().fold(f64::NAN, |x, y| f64::max(x, *y));
                         let min = signal.iter().fold(f64::NAN, |x, y| f64::min(x, *y));
                         min..max
                     };
-                    let fourier_signal = apply_filters(
+                    let (fourier_signal, complex) = apply_filters(
                         signal.clone(),
                         if mov_switch.state() {
                             Some(mov)
@@ -150,14 +156,29 @@ impl ObjectImpl for Window {
                         },
                     );
 
+                    let harmonies = complex
+                        .into_iter()
+                        .take(signal.len() / 2)
+                        .enumerate()
+                        .map(|(i, c)| Harmony {
+                            ampltd: c.norm(),
+                            phi: -f64::atan(c.im / c.re),
+                            frqnz: i as f64,
+                        })
+                        .collect::<Vec<_>>();
+                                    
+
                     let _ = draw_generic(
                         signal, 
                         fourier_signal,
+                        harmonies,
                         ys,
                         path, 
+                        path_frq,
                     );
 
                     picture.set_filename(Some(path));
+                    picture_frqnz.set_filename(Some(path_frq));
                 }
             };
         }));

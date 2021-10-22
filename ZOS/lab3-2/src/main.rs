@@ -29,7 +29,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let reader = hound::WavReader::open(path)?;
     let spec = reader.spec();
     let len = reader.len() as usize;
-    let sample_rate = 5 * spec.sample_rate as usize;
+    let sample_rate = 2 * spec.sample_rate as usize;
 
     let mut samples = reader
         .into_samples::<i16>()
@@ -48,10 +48,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .enumerate()
         .map(|(i, c)| {
             let i = i % sample_rate;
-            const LOW_BOUND: usize = 500;
-            const HIGH_BOUND: usize = 5000;
-            if i > LOW_BOUND && i < HIGH_BOUND
-                || i < sample_rate - LOW_BOUND && i > sample_rate - HIGH_BOUND
+            const LOW_BOUND: usize = 5000;
+            const HIGH_BOUND: usize = 20000;
+            if !(i > LOW_BOUND && i < HIGH_BOUND
+                || i < sample_rate - LOW_BOUND && i > sample_rate - HIGH_BOUND)
             {
                 // if true {
                 c.unscale(sample_rate as f32 / 2.)

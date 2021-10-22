@@ -1,6 +1,8 @@
 use crate::signals::fourier::Filter;
+
 use crate::signals::fourier::{discrete_fourier, inverse_discrete_fourier};
 use crate::signals::*;
+use num::complex::Complex;
 
 pub const ERROR_PARSE_AMPLITUDE: &str = "Couldn't parse amplitude";
 pub const ERROR_PARSE_PHI: &str = "Couldn't parse phi";
@@ -61,7 +63,7 @@ pub fn apply_filters(
     moving_average: Option<usize>,
     cut_min: Option<usize>,
     cut_max: Option<usize>,
-) -> Vec<f64> {
+) -> (Vec<f64>, Vec<Complex<f64>>) {
     let mut signal = signal;
     match moving_average {
         None => (),
@@ -79,21 +81,25 @@ pub fn apply_filters(
         Some(max) => fourier = Filter::cut_max(&fourier, max),
     }
 
-    inverse_discrete_fourier(&fourier, signal.len())
+    (inverse_discrete_fourier(&fourier, signal.len()), fourier)
 }
 
 pub const DRAW_DEFAULT_DIMS: (u32, u32) = (1600, 1200);
+pub const DRAW_DEFAULT_DIMS_FRQ: (u32, u32) = (800, 600);
 pub const DRAW_YS_STEP: f64 = 10.0;
 
 pub fn draw_generic(
     signal: Vec<f64>,
     fourier_signal: Vec<f64>,
+    harmonies: Vec<Harmony<f64>>,
 
     ys: Range<f64>,
 
     path: &str,
+    path_frq: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let xs = 0..signal.len();
+    let xs_ = 0..signal.len() / 2;
 
     let ys = ys.clone().step((ys.end - ys.start) / DRAW_YS_STEP);
 
@@ -103,12 +109,32 @@ pub fn draw_generic(
     let mut ctx = ChartBuilder::on(&root_area)
         .set_label_area_size(LabelAreaPosition::Left, 50)
         .set_label_area_size(LabelAreaPosition::Bottom, 20)
-        .build_cartesian_2d(xs.clone(), ys)?;
+        .build_cartesian_2d(xs.clone(), ys.clone())?;
 
     ctx.configure_mesh().draw()?;
 
     ctx.draw_series(LineSeries::new(xs.clone().zip(fourier_signal), &RED))?;
     ctx.draw_series(LineSeries::new(xs.clone().zip(signal), &BLUE))?;
+
+    let root_area = BitMapBackend::new(&path_frq, DRAW_DEFAULT_DIMS_FRQ).into_drawing_area();
+    root_area.fill(&WHITE)?;
+
+    let mut ctx = ChartBuilder::on(&root_area)
+        .set_label_area_size(LabelAreaPosition::Left, 50)
+        .set_label_area_size(LabelAreaPosition::Bottom, 20)
+        .build_cartesian_2d(xs_.clone(), ys)?;
+
+    ctx.configure_mesh().draw()?;
+
+    for harmony in harmonies {
+        ctx.draw_series(LineSeries::new(
+            vec![
+                (harmony.frqnz as usize, 0.),
+                (harmony.frqnz as usize, harmony.ampltd),
+            ],
+            &RED,
+        ))?;
+    }
 
     Ok(())
 }

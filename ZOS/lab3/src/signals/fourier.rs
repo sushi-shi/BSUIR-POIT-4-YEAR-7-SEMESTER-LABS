@@ -51,19 +51,10 @@ impl Filter {
             .into_iter()
             .enumerate()
             .map(|(i, c)| {
-                if i < len / 2 {
-                    if i < min {
-                        Complex::new(0., 0.)
-                    } else {
-                        *c
-                    }
+                if i < min || i > len - min {
+                    Complex::new(0., 0.)
                 } else {
-                    /* symmetrical */
-                    if i > len - min {
-                        Complex::new(0., 0.)
-                    } else {
-                        *c
-                    }
+                    *c
                 }
             })
             .collect()
@@ -75,19 +66,10 @@ impl Filter {
             .into_iter()
             .enumerate()
             .map(|(i, c)| {
-                if i < len / 2 {
-                    if i > max {
-                        Complex::new(0., 0.)
-                    } else {
-                        *c
-                    }
+                if i < len / 2 && i > max || i >= len / 2 && i < len - max {
+                    Complex::new(0., 0.)
                 } else {
-                    /* symmetrical */
-                    if i < len - max {
-                        Complex::new(0., 0.)
-                    } else {
-                        *c
-                    }
+                    *c
                 }
             })
             .collect()
