@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="MyGtkAppWindow" parent="GtkApplicationWindow">
+    <property name="title" translatable="yes">Floating Lab</property>
+    <property name="width_request">500</property>
+    <property name="height_request">250</property>
+    <property name="can-focus">1</property>
+    <child>
+      <object class="GtkGrid" id="main_grid">
+        <property name="hexpand">1</property>
+        <property name="can-focus">1</property>
+        <child>
+          <object class="GtkBox" id="input_box">
+            <property name="orientation">vertical</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="row">0</property>
+            </layout>
+            <child>
+              <object class="Input" id="rho">
+                <property name="label">RHO</property>
+                <property name="readonly">false</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="Input" id="mu">
+                <property name="label">MU</property>
+                <property name="readonly">false</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="Input" id="lambda">
+                <property name="label">LAM</property>
+                <property name="readonly">false</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="calc_button">
+                <property name="label">Calculate!</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="output_box">
+            <property name="can-focus">0</property>
+            <property name="orientation">vertical</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="row">0</property>
+            </layout>
+            <child>
+              <object class="Input" id="chance_reject_1">
+                <property name="label">P_OTK1</property>
+                <property name="readonly">true</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="Input" id="chance_reject_2">
+                <property name="label">P_OTK2</property>
+                <property name="readonly">true</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="Input" id="relative_throughput_1">
+                <property name="label">Q_1</property>
+                <property name="readonly">true</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="Input" id="relative_throughput_2">
+                <property name="label">Q_2</property>
+                <property name="readonly">true</property>
+                <property name="width">6</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="anchor">
+            <property name="can-focus">0</property>
+            <property name="orientation">vertical</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
