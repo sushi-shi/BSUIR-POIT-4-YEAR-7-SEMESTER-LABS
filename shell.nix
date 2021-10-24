@@ -31,11 +31,15 @@ stdenv.mkDerivation rec {
         xorg.libXcursor
         xorg.libX11
         xorg.libXrandr
+        xorg.libXi
         libGL
+        libxkbcommon
+        vulkan-tools
+        lutris
 
         SDL2 SDL2_gfx SDL2_image
 
-        gfortran
+        # gfortran
         openblas
         gdb
         python3
