@@ -30,14 +30,16 @@ WHERE `sb_start` > '2015-09-20';
 /*
   13 Обновить все имена авторов, добавив в конец имени « [+]», если в библиотеке есть более трёх книг этого автора,
   или добавив в конец имени « [-]» в противном случае.
+  NOTE. Учитываются как различные книги, так и их количество
 */
 UPDATE authors
 SET `a_name` = CONCAT(`a_name`, ' ',
   IF(
-    (SELECT COUNT(*) AS `books_no`
-    FROM `m2m_books_authors` AS `m2m`
-    WHERE `m2m`.`a_id` = `authors`.`a_id`
-    GROUP BY `m2m`.`a_id`
+    (SELECT SUM(`b_quantity`) AS `books_no`
+    FROM `books`
+    JOIN `m2m_books_authors` USING (`b_id`)
+    GROUP BY `a_id`
+    HAVING `a_id` = `authors`.`a_id`
     ) > 3,
     '[+]',
     '[-]'

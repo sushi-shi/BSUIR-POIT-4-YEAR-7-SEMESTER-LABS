@@ -9,6 +9,7 @@ HAVING COUNT(*) > 1;
 
 /*
   3.  Показать все книги с их жанрами (дублирование названий книг не допускается).
+  NOTE. Я правильно понимаю, что под "не допускается" имеется ввиду "должны быть в разных рядах"?
 */
 SELECT `b_name`, GROUP_CONCAT(`g_name`) AS `genres`
 FROM `books`
@@ -22,7 +23,7 @@ GROUP BY `b_id`;
 SELECT `b_name`
 FROM `books`
 JOIN `subscriptions` ON (`b_id` = `sb_book`)
-GROUP BY `b_name`;
+GROUP BY `b_id`;
 
 /*
   15. Показать всех авторов и количество книг (не экземпляров книг,

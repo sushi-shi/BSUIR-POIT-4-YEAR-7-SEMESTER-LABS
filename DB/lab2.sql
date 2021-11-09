@@ -41,9 +41,11 @@ FROM `books`;
   NOTE. Читатели без книг считаются незарегестрированными (один тут есть такой)
 */
 SELECT AVG(`sb_registred`) as `sb_registred_avg`
-FROM (SELECT DATEDIFF(CURDATE(), MIN(`sb_start`)) AS `sb_registred`
+FROM (
+  SELECT DATEDIFF(CURDATE(), MIN(`sb_start`)) AS `sb_registred`
   FROM `subscriptions`
-  GROUP BY `sb_subscriber`) AS `sb_registration_times`;
+  GROUP BY `sb_subscriber`
+) AS `useless`;
 
 /*
   17. Показать, сколько книг было возвращено и не возвращено в библиотеку
