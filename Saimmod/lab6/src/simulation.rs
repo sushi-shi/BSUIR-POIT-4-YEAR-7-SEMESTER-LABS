@@ -258,14 +258,14 @@ pub fn simulate(mu: Chance, lambda: Chance, rho: Chance) -> Simulation {
         (state.dropped_pri as f32 / time)
     );
 
-    let pri_its = lambda * rho * (1. - states.get(&[1, 1]).unwrap() / time);
+    let pri_its = lambda * rho * (1. - states.get(&[1, 1]).unwrap_or_else(|| &0.) / time);
     println!(
         "Priority channel intensity\ntheory: {}, \npractice: {}\n",
         pri_its,
         (state.processed_pri as f32 / time)
     );
 
-    let good = states.get(&[0, 2]).unwrap() + states.get(&[2, 2]).unwrap();
+    let good = states.get(&[0, 2]).unwrap_or_else(|| &0.) + states.get(&[2, 2]).unwrap_or_else(|| &0.);
     let good = good / time;
     let ord_its = mu * good;
     println!(
