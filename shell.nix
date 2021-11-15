@@ -43,5 +43,7 @@ stdenv.mkDerivation rec {
         openblas
         gdb
         python3
+
+        postgresql
     ];
 }

@@ -55,7 +55,6 @@ impl Face {
         textures: &Vec<VertexTexture>, 
         normals: &Vec<VertexNormal>,
     ) -> Self {
-        // self
         Face::new(
             self.vec.into_iter().map(|(vertex_idx, m_texture_idx, m_normal_idx)| {(
                 if vertex_idx > 0 { vertex_idx } else { vertex_idx + verticies.len() as i64  + 1},
@@ -67,3 +66,4 @@ impl Face {
         )
     }
 }
+

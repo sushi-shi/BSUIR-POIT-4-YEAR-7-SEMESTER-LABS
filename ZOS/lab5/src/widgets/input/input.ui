@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="Input" parent="GtkBox">
+    <property name="orientation">horizontal</property>
+    <child>
+      <object class="GtkLabel" id="input_label">
+      </object>
+    </child>
+    <child>
+      <object class="GtkEntry" id="input_entry">
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="input_minus">
+        <property name="label">-</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkButton" id="input_plus">
+        <property name="label">+</property>
+      </object>
+    </child>
+  </template>
+</interface>

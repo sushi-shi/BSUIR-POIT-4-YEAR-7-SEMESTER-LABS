@@ -76,6 +76,9 @@ impl Sandbox for Kernels {
     fn view(&mut self) -> Element<Message> {
         let mut canvass = Row::new();
 
+        let img =
+            Container::new(Image::new("./examples/cln1.png").width(Length::Units(300))).center_x();
+        canvass = canvass.push(img);
         let img = Container::new(Image::new(&self.image_path).width(Length::Units(300))).center_x();
         canvass = canvass.push(img);
 
