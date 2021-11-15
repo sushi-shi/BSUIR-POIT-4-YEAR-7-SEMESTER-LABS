@@ -35,24 +35,15 @@ impl Sandbox for CorrelationState {
                 let img_f = ImageReader::open("./examples/f.JPG")
                     .unwrap()
                     .decode()
-                    .unwrap()
-                    .grayscale()
-                    .as_luma8()
-                    .unwrap()
-                    .clone();
+                    .unwrap();
 
                 let img_g = ImageReader::open("./examples/g.JPG")
                     .unwrap()
                     .decode()
-                    .unwrap()
-                    .grayscale()
-                    .as_luma8()
-                    .unwrap()
-                    .clone();
+                    .unwrap();
 
                 let rimg = convolute(img_f, img_g);
                 rimg.save("./examples/r.png").unwrap();
-                println!("COMOL");
             }
         }
     }
@@ -68,12 +59,12 @@ impl Sandbox for CorrelationState {
         canvass = canvass.push(img_g);
 
         let mut blanket = Column::new();
-        blanket = blanket.push(
-            Button::new(&mut self.button, Text::new("Draw!")).on_press(Message::ButtonPressed),
-        );
         let img_c =
             Container::new(Image::new("./examples/r.png").width(Length::Units(300))).center_x();
         blanket = blanket.push(img_c);
+        blanket = blanket.push(
+            Button::new(&mut self.button, Text::new("Draw!")).on_press(Message::ButtonPressed),
+        );
 
         canvass = canvass.push(blanket);
 
@@ -81,7 +72,7 @@ impl Sandbox for CorrelationState {
     }
 }
 
-fn convolute(img_f: GrayImage, img_g: GrayImage) -> GrayImage {
+fn convolute(img_f: DynamicImage, img_g: DynamicImage) -> GrayImage {
     let (fwidth, fheight) = img_f.dimensions();
     let (gwidth, gheight) = img_g.dimensions();
 
@@ -101,31 +92,26 @@ fn convolute(img_f: GrayImage, img_g: GrayImage) -> GrayImage {
 
                     // calculate mask
                     let px = img_g.get_pixel(i, j).0;
-                    let v = px[0] as f32;
+                    let (r, g, b) = (px[0] as f32, px[1] as f32, px[2] as f32);
 
-                    let fv = if fi < fwidth || fj < fheight {
+                    let (fr, fg, fb) = if fi < fwidth || fj < fheight {
                         let px = img_f.get_pixel(fi, fj).0;
-                        px[0] as f32
+                        (px[0] as f32, px[1] as f32, px[2] as f32)
                     } else {
-                        0.
+                        (0., 0., 0.)
                     };
-                    res += v * fv / (255. * 255.);
+                    res += r * fr + g * fg + b * fb;
                 }
             }
             max = f32::max(max, res);
             min = f32::min(min, res);
-            print!("{}", res);
             img_res[x as usize][y as usize] = res;
         }
     }
-    println!("{}", min);
-    println!("{}", max);
     for x in 0..fwidth - gwidth {
         for y in 0..fheight - gheight {
-            // println!("GOD DIS {}", img_res[x as usize][y as usize]);
             let luma = 255. * (img_res[x as usize][y as usize] - min) / (max - min);
             let luma = luma as u8;
-            // println!("LUMED {}", luma);
             img_c.put_pixel(x, y, [luma].into());
         }
     }

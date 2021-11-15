@@ -57,6 +57,12 @@ impl Signal for Wav {
 
     fn signal(&self) -> Vec<f64> {
         let o_2 = self.samples.len() / 20;
-        self.samples.iter().take(o_2).map(|i| *i as f64).collect()
+        let sieve = Some(true)
+            .into_iter()
+            .chain(std::iter::repeat(false).take(20))
+            .cycle();
+
+        let samples = self.samples.iter().take(o_2).map(|i| *i as f64);
+        samples.zip(sieve).filter(|x| x.1).map(|x| x.0).collect()
     }
 }
