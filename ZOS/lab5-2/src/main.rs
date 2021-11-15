@@ -32,17 +32,23 @@ impl Sandbox for CorrelationState {
     fn update(&mut self, message: Message) {
         match message {
             Message::ButtonPressed => {
-                let img_f = ImageReader::open("./examples/f.JPG")
+                let img = ImageReader::open("./examples/f.JPG")
                     .unwrap()
                     .decode()
-                    .unwrap();
+                    .unwrap()
+                    .grayscale()
+                    .to_luma8()
+                    .clone();
 
-                let img_g = ImageReader::open("./examples/g.JPG")
+                let template = ImageReader::open("./examples/g.JPG")
                     .unwrap()
                     .decode()
-                    .unwrap();
+                    .unwrap()
+                    .grayscale()
+                    .to_luma8()
+                    .clone();
 
-                let rimg = convolute(img_f, img_g);
+                let rimg = correlate(img, template);
                 rimg.save("./examples/r.png").unwrap();
             }
         }
@@ -118,19 +124,99 @@ fn convolute(img_f: DynamicImage, img_g: DynamicImage) -> GrayImage {
     img_c
 }
 
-pub fn correlate(signal_f: &[f64], signal_g: &[f64]) -> Vec<f64> {
-    let mut res = Vec::new();
-    for tau in 0..signal_f.len() {
-        let mut rho = 0.;
-        for t in 0..signal_g.len() {
-            rho += signal_g[t]
-                * if t + tau < signal_f.len() {
-                    signal_f[t + tau]
-                } else {
-                    0.
-                };
-        }
-        res.push(rho);
+pub fn mean(img: &GrayImage) -> f32 {
+    let (width, height) = img.dimensions();
+    let m = (width * height) as f32;
+    let mut dr = 0.;
+
+    for px in img.pixels() {
+        let r = px.0[0];
+        dr += r as f32;
     }
-    res
+    dr / m
+}
+
+pub fn deviation(img: &GrayImage, mean: f32) -> f32 {
+    let (width, height) = img.dimensions();
+    let m = (width * height) as f32;
+    let mut dr = 0.;
+
+    for px in img.pixels() {
+        let r = px.0[0] as f32;
+        dr += (r - mean).powf(2.);
+    }
+    (dr / (m - 1.)).sqrt()
+}
+
+pub fn correlate(img: GrayImage, template: GrayImage) -> GrayImage {
+    let tmean = mean(&template);
+    let tdevi = deviation(&template, tmean);
+
+    let (twidth, theight) = template.dimensions();
+
+    let (iwidth, iheight) = img.dimensions();
+
+    let mut rimg = GrayImage::new(iwidth, iheight);
+
+    let mut rvec = vec![vec![0.; iheight as usize]; iwidth as usize];
+    let mut max = 0.;
+    let mut min = f32::MAX;
+
+    for i in 0..iwidth {
+        for j in 0..iheight {
+            let itwidth = u32::min(i + twidth, iwidth);
+            let itheight = u32::min(j + theight, iheight);
+            let itsize = (itwidth * itheight) as f32;
+
+            let itmean = {
+                let mut dr = 0.;
+                for i in i..itwidth {
+                    for j in j..itheight {
+                        let px = img.get_pixel(i, j);
+                        let r = px.0[0] as f32;
+                        dr += r;
+                    }
+                }
+                dr / itsize
+            };
+            let itdevi = {
+                let mut dr = 0.;
+                for i in i..itwidth {
+                    for j in j..itheight {
+                        let px = img.get_pixel(i, j);
+                        let r = px.0[0] as f32;
+                        dr += (r - itmean).powf(2.);
+                    }
+                }
+                (dr / (itsize - 1.)).sqrt()
+            };
+
+            let cross = {
+                let mut dr = 0.;
+                for (x, i) in (i..itwidth).enumerate() {
+                    for (y, j) in (j..itheight).enumerate() {
+                        let px = img.get_pixel(i, j);
+                        let r = px.0[0] as f32;
+
+                        let tpx = template.get_pixel(x as u32, y as u32);
+                        let tr = tpx[0] as f32;
+
+                        dr += (r - itmean) * (tr - tmean);
+                    }
+                }
+                dr / itsize
+            };
+            let px = cross / (itdevi * tdevi);
+            max = f32::max(max, px);
+            min = f32::min(min, px);
+            rvec[i as usize][j as usize] = px;
+        }
+    }
+    for i in 0..iwidth {
+        for j in 0..iheight {
+            let px = 255. * (rvec[i as usize][j as usize] - min) / (max - min);
+            rimg.put_pixel(i, j, [px as u8].into());
+        }
+    }
+    rimg
 }
