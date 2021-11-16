@@ -1,0 +1,11 @@
+########LED Pin define#####################
+NET LED1_out                        		    	LOC = P4 | IOSTANDARD = "LVCMOS33";        ## LED1
+NET LED2_out         	              	       		LOC = N5 | IOSTANDARD = "LVCMOS33";       ## LED2
+NET LED3_out      	                          		LOC = P5 | IOSTANDARD = "LVCMOS33";        ## LED3
+NET LED4_out   	                             		LOC = M6 | IOSTANDARD = "LVCMOS33";       ## LED4
+
+########KEY Pin define#####################
+NET KEY1_in	                        		LOC = C3 | IOSTANDARD = "LVCMOS33";       ## KEY1
+NET KEY2_in 	                      	        	LOC = D3 | IOSTANDARD = "LVCMOS33";       ## KEY2
+NET KEY3_in                                  		LOC = E4 | IOSTANDARD = "LVCMOS33";       ## KEY3
+NET KEY4_in                                  		LOC = E3 | IOSTANDARD = "LVCMOS33";       ## KEY4

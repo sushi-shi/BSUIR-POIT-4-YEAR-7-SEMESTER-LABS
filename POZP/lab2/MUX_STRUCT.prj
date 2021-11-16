@@ -1,0 +1,4 @@
+vhdl work "OR2.vhd"
+vhdl work "INV.vhd"
+vhdl work "AND2.vhd"
+vhdl work "MUX_STRUCT.vhd"

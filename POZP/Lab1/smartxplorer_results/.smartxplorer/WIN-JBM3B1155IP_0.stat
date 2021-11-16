@@ -1,0 +1,98 @@
+START:Strategy:1:MapRunTime
+REMOTE_PID:2224
+RUNNING:2224:1172:MapRunTime:map:Equation_Impl.ngd: -ol high -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun1:bslEquation_Impl.pcf
+STATUS:MapRunTime:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+STATUS:MapRunTime:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+STATUS:MapRunTime:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+STATUS:MapRunTime:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+STATUS:MapRunTime:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+STATUS:MapRunTime:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:15.97 secs 
+DONE:map:0
+RUNNING:2224:2436:MapRunTime:par:Equation_Impl_map.ncd: -ol high  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun1:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:2224:2348:MapRunTime:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run1\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun1:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun1:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun1:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:2:MapLogicOpt
+REMOTE_PID:1628
+RUNNING:1628:1464:MapLogicOpt:map:Equation_Impl.ngd: -ol high -xe n -logic_opt on -t 2 -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun2:bslEquation_Impl.pcf
+STATUS:MapLogicOpt:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+STATUS:MapLogicOpt:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+STATUS:MapLogicOpt:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+STATUS:MapLogicOpt:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+STATUS:MapLogicOpt:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+STATUS:MapLogicOpt:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:15.12 secs 
+DONE:map:0
+RUNNING:1628:2564:MapLogicOpt:par:Equation_Impl_map.ncd: -ol high -xe n  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun2:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:1628:1824:MapLogicOpt:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run2\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun2:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun2:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun2:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:3:MapGlobOptIOReg
+REMOTE_PID:1896
+RUNNING:1896:3016:MapGlobOptIOReg:map:Equation_Impl.ngd: -ol high -global_opt speed -pr b -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun3:bslEquation_Impl.pcf
+STATUS:MapGlobOptIOReg:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+STATUS:MapGlobOptIOReg:map:Score:None:lut:2 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+STATUS:MapGlobOptIOReg:map:Score:None:lut:2 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+STATUS:MapGlobOptIOReg:map:Score:None:lut:2 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+STATUS:MapGlobOptIOReg:map:Score:None:lut:2 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+STATUS:MapGlobOptIOReg:map:Score:None:lut:2 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:20.11 secs 
+DONE:map:0
+RUNNING:1896:2324:MapGlobOptIOReg:par:Equation_Impl_map.ncd: -ol high -xe n  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun3:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:1896:2996:MapGlobOptIOReg:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run3\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun3:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun3:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun3:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:4:MapRegDup
+REMOTE_PID:2184
+RUNNING:2184:1872:MapRegDup:map:Equation_Impl.ngd: -ol high -xe n -register_duplication on -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun4:bslEquation_Impl.pcf
+STATUS:MapRegDup:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+STATUS:MapRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+STATUS:MapRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+STATUS:MapRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+STATUS:MapRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+STATUS:MapRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:15.14 secs 
+DONE:map:0
+RUNNING:2184:188:MapRegDup:par:Equation_Impl_map.ncd: -ol high -xe n  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun4:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:2184:3048:MapRegDup:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run4\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun4:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun4:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun4:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:5:MapExtraEffortIOReg
+REMOTE_PID:3016
+RUNNING:3016:2852:MapExtraEffortIOReg:map:Equation_Impl.ngd: -ol high -xe n -pr b -t 7 -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun5:bslEquation_Impl.pcf
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+STATUS:MapExtraEffortIOReg:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:9.53 secs 
+DONE:map:0
+RUNNING:3016:1636:MapExtraEffortIOReg:par:Equation_Impl_map.ncd: -ol high -xe n  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun5:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:3016:1592:MapExtraEffortIOReg:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run5\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun5:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun5:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun5:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:6:MapLogOptRegDup
+REMOTE_PID:884
+RUNNING:884:2300:MapLogOptRegDup:map:Equation_Impl.ngd: -ol high -xe n -logic_opt on -register_duplication on -t 2 -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun6:bslEquation_Impl.pcf
+STATUS:MapLogOptRegDup:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+STATUS:MapLogOptRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+STATUS:MapLogOptRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+STATUS:MapLogOptRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+STATUS:MapLogOptRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+STATUS:MapLogOptRegDup:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:15.09 secs 
+DONE:map:0
+RUNNING:884:3012:MapLogOptRegDup:par:Equation_Impl_map.ncd: -ol high -xe n  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun6:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:884:1812:MapLogOptRegDup:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run6\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun6:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun6:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun6:bslEquation_Impl.twr
+DONE:trce:0
+START:Strategy:7:MapExtraEffort2
+REMOTE_PID:288
+RUNNING:288:2196:MapExtraEffort2:map:Equation_Impl.ngd: -ol high -xe n -t 3 -w  -p xc6slx9-ftg256-3 -o Equation_Impl_map.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun7:bslEquation_Impl.pcf
+STATUS:MapExtraEffort2:map:Score:None:lut:None:slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+STATUS:MapExtraEffort2:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:None:bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+STATUS:MapExtraEffort2:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:None:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+STATUS:MapExtraEffort2:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+STATUS:MapExtraEffort2:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:None:mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+STATUS:MapExtraEffort2:map:Score:None:lut:1 (1%):slice_reg:0 (0%):slice:1 (1%):bram:0:dsp48:0 (0%):mult18x18:None:Power:None:wnsInfo:None:Time:10.09 secs 
+DONE:map:0
+RUNNING:288:2412:MapExtraEffort2:par:Equation_Impl_map.ncd: -ol high  -w Equation_Impl.ncd  Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun7:bslEquation_Impl.pcf
+DONE:par:0
+RUNNING:288:188:MapExtraEffort2:trce:Y:\POCP_Labs\Lab1\smartxplorer_results\run7\Equation_Impl.ncd:Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun7:bslEquation_Impl.pcf -xml Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun7:bslEquation_Impl.twx -v 3 -s 3 -n 3 -fastpaths    -o Y:cl:bslPOCP_Labs:bslLab1:bslsmartxplorer_results:bslrun7:bslEquation_Impl.twr
+DONE:trce:0

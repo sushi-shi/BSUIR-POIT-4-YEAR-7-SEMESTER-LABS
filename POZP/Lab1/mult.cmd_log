@@ -1,0 +1,3 @@
+vhdtdtfi -prj Lab1 -o Y:/POCP_Labs/Lab1/mult.vhi -module mult -template Y:/xilinx/14.7/ISE_DS/ISE//data/vhdlinst.tft -deleteonerror -lib work mult.vhd 
+vhdtdtfi -lib work mult.vhd -prj Lab1 -o mult.spl -module mult -template Y:/xilinx/14.7/ISE_DS/ISE//data/splfile.tft -deleteonerror 
+spl2sym -intstyle ise -family spartan6 mult.spl Y:/POCP_Labs/Lab1/mult.sym 
