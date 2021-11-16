@@ -48,17 +48,17 @@ unisims
 *.lib
 
 ## dirs
-vivado.cache/
-vivado.hw/
-vivado.ip_user_files/
-vivado.runs/
-vivado.sim/
+**/vivado.cache/
+**/vivado.hw/
+**/vivado.ip_user_files/
+**/vivado.runs/
+**/vivado.sim/
 
 ###### for Xilinx Vivado|ISE
-.Xil/
-.cache/
+**/.Xil/
+**/.cache/
 fsm_encoding.os
-tab_*/
+**/tab_*/
 webtalk.*
 vivado_pid*.str
 hs_err_pid*
