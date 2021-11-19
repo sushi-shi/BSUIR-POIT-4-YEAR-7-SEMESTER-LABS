@@ -1,0 +1,2 @@
+xst -intstyle ise -ifn "C:/xil/lab3/DFF_SYNC_SET_ASYNC_RESET.xst" -ofn "C:/xil/lab3/DFF_SYNC_SET_ASYNC_RESET.syr" 
+xst -intstyle ise -ifn "C:/xil/lab3/DFF_SYNC_SET_ASYNC_RESET.xst" -ofn "C:/xil/lab3/DFF_SYNC_SET_ASYNC_RESET.syr" 

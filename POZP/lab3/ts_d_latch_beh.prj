@@ -1,0 +1,5 @@
+vhdl work "MY_NOT.vhd"
+vhdl work "MY_NOR.vhd"
+vhdl work "D_LATCH_BHVR.vhd"
+vhdl work "D_LATCH.vhd"
+vhdl work "ts_d_latch.vhd"

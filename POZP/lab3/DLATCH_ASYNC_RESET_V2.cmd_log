@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "C:/xil/lab3/DLATCH_ASYNC_RESET_V2.xst" -ofn "C:/xil/lab3/DLATCH_ASYNC_RESET_V2.syr" 

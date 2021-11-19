@@ -1,0 +1,4 @@
+vhdl isim_temp "MY_NOT.vhd"
+vhdl isim_temp "D_LATCH_ENABLE_BHVR.vhd"
+vhdl isim_temp "DFF_MASTER_SLAVE_V2.vhd"
+vhdl isim_temp "tb_dff_master_slave.vhd"
