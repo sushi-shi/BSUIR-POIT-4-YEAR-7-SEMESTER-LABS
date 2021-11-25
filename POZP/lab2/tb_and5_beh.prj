@@ -1,4 +1,0 @@
-vhdl work "AND2.vhd"
-vhdl work "AND5_STRUCT.vhd"
-vhdl work "AND5.vhd"
-vhdl work "tb_and5.vhd"

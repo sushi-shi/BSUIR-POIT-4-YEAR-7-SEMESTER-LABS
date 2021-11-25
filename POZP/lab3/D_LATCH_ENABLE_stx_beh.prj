@@ -1,5 +1,0 @@
-vhdl isim_temp "MY_NOR.vhd"
-vhdl isim_temp "RS_LATCH.vhd"
-vhdl isim_temp "MY_NOT.vhd"
-vhdl isim_temp "MY_AND.vhd"
-vhdl isim_temp "D_LATCH_ENABLE.vhd"

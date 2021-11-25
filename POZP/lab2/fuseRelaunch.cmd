@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -lib "secureip" -o "C:/xil/lab2/tb_lut6_isim_beh.exe" -prj "C:/xil/lab2/tb_lut6_beh.prj" "work.tb_lut6" 

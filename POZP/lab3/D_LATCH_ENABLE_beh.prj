@@ -1,5 +1,0 @@
-vhdl work "MY_NOR.vhd"
-vhdl work "RS_LATCH.vhd"
-vhdl work "MY_NOT.vhd"
-vhdl work "MY_AND.vhd"
-vhdl work "D_LATCH_ENABLE.vhd"

@@ -1,3 +1,0 @@
-vhdl isim_temp "INV.vhd"
-vhdl isim_temp "AND3.vhd"
-vhdl isim_temp "DEMUX_1X4_STRUCT.vhd"

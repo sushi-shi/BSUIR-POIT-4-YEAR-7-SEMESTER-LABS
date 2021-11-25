@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -lib "secureip" -o "Y:/POCP_Labs/Lab1/mux4_isim_beh.exe" -prj "Y:/POCP_Labs/Lab1/mux4_beh.prj" "work.mux4" 

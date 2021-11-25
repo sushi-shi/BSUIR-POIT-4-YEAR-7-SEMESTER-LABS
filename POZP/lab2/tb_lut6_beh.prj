@@ -1,4 +1,0 @@
-vhdl work "LUT_5.vhd"
-vhdl work "LUT6_STR.vhd"
-vhdl work "LUT6_beh.vhd"
-vhdl work "tb_lut6.vhd"

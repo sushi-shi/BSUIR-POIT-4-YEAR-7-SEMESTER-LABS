@@ -1,7 +1,0 @@
-[Inputs]
-S
-=A[1:0]=
-=B[1:0]=
-[Outputs]
-=X[1:0]=
-[BiDir]

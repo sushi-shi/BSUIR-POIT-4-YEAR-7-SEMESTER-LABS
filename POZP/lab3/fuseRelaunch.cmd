@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -lib "secureip" -o "C:/xil/lab3/tb_dff_master_slave_isim_beh.exe" -prj "C:/xil/lab3/tb_dff_master_slave_beh.prj" "work.tb_dff_master_slave" 
