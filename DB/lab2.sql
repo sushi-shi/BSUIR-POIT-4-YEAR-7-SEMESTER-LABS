@@ -16,8 +16,6 @@ FROM `subscribers`;
 SELECT COUNT(DISTINCT `sb_subscriber`) AS `subscribers_count`
 FROM `subscriptions`;
 
-/****************************************************************/
-
 /*
   12. Показать идентификатор одного (любого) читателя,
     взявшего в библиотеке больше всего книг.
